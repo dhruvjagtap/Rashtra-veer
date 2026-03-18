@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1085144778387",
+    "project_id": "rashtra-veer",
+    "storage_bucket": "rashtra-veer.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085144778387:android:cc345a200e559afc11af66",
+        "android_client_info": {
+          "package_name": "com.example.rashtraveer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlpNfIed6icmceWSYmOW9cSQcf8LdanqQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
