@@ -2,15 +2,15 @@ name: Flutter CI
 
 on:
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 jobs:
   build-and-test:
     name: Build & Test
     runs-on: ubuntu-latest
-    
+
     steps:
       # Checkout code
       - name: Checkout repository
@@ -20,15 +20,15 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
 
       # Setup Flutter
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0' # Use stable version
-          channel: 'stable'
+          flutter-version: "3.41.6" # Use stable version
+          channel: "stable"
           cache: true
 
       # Verify Flutter installation
@@ -59,7 +59,7 @@ jobs:
     name: Automated Code Review
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -67,8 +67,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
-          channel: 'stable'
+          flutter-version: "3.24.0"
+          channel: "stable"
           cache: true
 
       - name: Install dependencies
