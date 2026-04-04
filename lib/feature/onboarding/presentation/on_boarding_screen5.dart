@@ -133,7 +133,7 @@ class _OnBoardingScreen5State extends State<OnBoardingScreen5> {
               boxShadow: isSelected
                   ? [
                       BoxShadow(
-                        color: Colors.green.withOpacity(0.2),
+                        color: Colors.green.withValues(alpha: 0.02),
                         blurRadius: 10,
                       ),
                     ]

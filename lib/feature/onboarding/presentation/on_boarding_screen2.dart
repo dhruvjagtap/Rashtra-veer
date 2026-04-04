@@ -121,7 +121,12 @@ class _OnBoardingSreen2State extends State<OnBoardingScreen2> {
             color: isSelected ? Colors.green : Colors.grey.shade300,
           ),
           boxShadow: isSelected
-              ? [BoxShadow(color: Colors.green.withOpacity(0.2), blurRadius: 8)]
+              ? [
+                  BoxShadow(
+                    color: Colors.green.withValues(alpha: 0.2),
+                    blurRadius: 8,
+                  ),
+                ]
               : [],
         ),
         child: Center(
@@ -150,7 +155,9 @@ class _OnBoardingSreen2State extends State<OnBoardingScreen2> {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.green.withOpacity(0.1) : Colors.white,
+          color: isSelected
+              ? Colors.green.withValues(alpha: 0.1)
+              : Colors.white,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isSelected ? Colors.green : Colors.grey.shade300,

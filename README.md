@@ -296,8 +296,8 @@ keytool -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore -sto
 ### Overview
 
 - **Total Screens:** 30
-- **Completed:** 12
-- **Pending:** 18
+- **Completed:** 14
+- **Pending:** 16
 
 ---
 
@@ -324,6 +324,11 @@ keytool -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore -sto
 - [x] Home Dashboard
 - [x] Leaderboard Screen
 
+### Content Module
+
+- [x] Video Library Screen
+- [x] Video Player Screen
+
 ---
 
 ## Pending Screens
@@ -344,11 +349,6 @@ keytool -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore -sto
 
 - [ ] Activity Tracking (Live GPS)
 - [ ] Activity Summary Screen
-
-### Content Module
-
-- [ ] Video Library Screen
-- [ ] Video Player Screen
 
 ### Chat Module
 

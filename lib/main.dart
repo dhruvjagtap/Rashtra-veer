@@ -10,6 +10,7 @@ import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen3.
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen4.dart';
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen5.dart';
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen6.dart';
+// import 'package:rashtraveer/feature/video_library/presentation/video_library_screen.dart';
 
 import 'firebase_options.dart';
 
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
       title: 'Rashtraveer',
       debugShowCheckedModeBanner: false,
 
+      // home: const VideoLibraryScreen(),
       initialRoute: SplashScreen.routeName,
 
       routes: {

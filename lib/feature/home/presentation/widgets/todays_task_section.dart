@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Dummy task model for UI.
 class TaskItem {
-  const TaskItem({
-    required this.name,
-    required this.isCompleted,
-  });
+  const TaskItem({required this.name, required this.isCompleted});
 
   final String name;
   final bool isCompleted;
@@ -59,10 +56,8 @@ class TodaysTaskSection extends StatelessWidget {
           child: Column(
             children: _dummyTasks
                 .map(
-                  (task) => _TaskTile(
-                    name: task.name,
-                    isCompleted: task.isCompleted,
-                  ),
+                  (task) =>
+                      _TaskTile(name: task.name, isCompleted: task.isCompleted),
                 )
                 .toList(),
           ),
@@ -73,10 +68,7 @@ class TodaysTaskSection extends StatelessWidget {
 }
 
 class _TaskTile extends StatelessWidget {
-  const _TaskTile({
-    required this.name,
-    required this.isCompleted,
-  });
+  const _TaskTile({required this.name, required this.isCompleted});
 
   final String name;
   final bool isCompleted;
@@ -92,7 +84,7 @@ class _TaskTile extends StatelessWidget {
         border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -106,10 +98,7 @@ class _TaskTile extends StatelessWidget {
             decoration: BoxDecoration(
               color: isCompleted ? const Color(0xFF7F7BFF) : Colors.transparent,
               borderRadius: BorderRadius.circular(6),
-              border: Border.all(
-                color: const Color(0xFF7F7BFF),
-                width: 2,
-              ),
+              border: Border.all(color: const Color(0xFF7F7BFF), width: 2),
             ),
             child: isCompleted
                 ? const Icon(Icons.check, size: 16, color: Colors.white)
