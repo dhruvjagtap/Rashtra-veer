@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:rashtraveer/core/splash_screen.dart';
-import 'package:rashtraveer/feature/auth/presentation/login_screen.dart';
-import 'package:rashtraveer/feature/auth/presentation/register_screen.dart';
-import 'package:rashtraveer/feature/home/presentation/home_screen.dart';
-import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen1.dart';
-import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen2.dart';
-import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen3.dart';
-import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen4.dart';
-import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen5.dart';
-import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen6.dart';
+// import 'package:rashtraveer/core/splash_screen.dart';
+// import 'package:rashtraveer/feature/auth/presentation/login_screen.dart';
+// import 'package:rashtraveer/feature/auth/presentation/register_screen.dart';
+// import 'package:rashtraveer/feature/home/presentation/home_screen.dart';
+// import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen1.dart';
+// import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen2.dart';
+// import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen3.dart';
+// import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen4.dart';
+// import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen5.dart';
+// import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen6.dart';
+import 'package:rashtraveer/feature/video_library/presentation/video_library_screen.dart';
 
 import 'firebase_options.dart';
 
@@ -27,30 +28,31 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Rashtraveer',
       debugShowCheckedModeBanner: false,
+      home: const VideoLibraryScreen(),
 
-      initialRoute: SplashScreen.routeName,
+      // initialRoute: SplashScreen.routeName,
 
-      routes: {
-        SplashScreen.routeName: (context) => const SplashScreen(),
+      // routes: {
+      //   SplashScreen.routeName: (context) => const SplashScreen(),
 
-        LoginScreen.routeName: (context) => const LoginScreen(),
+      //   LoginScreen.routeName: (context) => const LoginScreen(),
 
-        RegisterScreen.routeName: (context) => const RegisterScreen(),
+      //   RegisterScreen.routeName: (context) => const RegisterScreen(),
 
-        OnBoardingScreen1.routeName: (context) => const OnBoardingScreen1(),
+      //   OnBoardingScreen1.routeName: (context) => const OnBoardingScreen1(),
 
-        OnBoardingScreen2.routeName: (context) => const OnBoardingScreen2(),
+      //   OnBoardingScreen2.routeName: (context) => const OnBoardingScreen2(),
 
-        OnBoardingScreen3.routeName: (context) => const OnBoardingScreen3(),
+      //   OnBoardingScreen3.routeName: (context) => const OnBoardingScreen3(),
 
-        OnBoardingScreen4.routeName: (context) => const OnBoardingScreen4(),
+      //   OnBoardingScreen4.routeName: (context) => const OnBoardingScreen4(),
 
-        OnBoardingScreen5.routeName: (context) => const OnBoardingScreen5(),
+      //   OnBoardingScreen5.routeName: (context) => const OnBoardingScreen5(),
 
-        OnBoardingScreen6.routeName: (context) => const OnBoardingScreen6(),
+      //   OnBoardingScreen6.routeName: (context) => const OnBoardingScreen6(),
 
-        HomeScreen.routeName: (context) => const HomeScreen(),
-      },
+      //   HomeScreen.routeName: (context) => const HomeScreen(),
+      // },
     );
   }
 }

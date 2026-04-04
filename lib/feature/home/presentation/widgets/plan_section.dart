@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Plan card section with icon, title, and edit action.
 class PlanSection extends StatelessWidget {
-  const PlanSection({
-    super.key,
-    this.planTitle = 'Build Muscle in 30 Days',
-  });
+  const PlanSection({super.key, this.planTitle = 'Build Muscle in 30 Days'});
 
   final String planTitle;
 
@@ -36,7 +33,7 @@ class PlanSection extends StatelessWidget {
               border: Border.all(color: Colors.grey.shade200),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -47,7 +44,7 @@ class PlanSection extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF7F7BFF).withOpacity(0.15),
+                    color: const Color(0xFF7F7BFF).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(

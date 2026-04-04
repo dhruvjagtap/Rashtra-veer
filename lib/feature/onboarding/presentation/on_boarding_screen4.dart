@@ -206,7 +206,7 @@ class _OnBoardingScreen4State extends State<OnBoardingScreen4> {
                 boxShadow: [
                   if (isSelected)
                     BoxShadow(
-                      color: Colors.green.withOpacity(0.15),
+                      color: Colors.green.withValues(alpha: 0.15),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
