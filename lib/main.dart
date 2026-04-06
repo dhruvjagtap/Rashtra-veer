@@ -11,7 +11,7 @@ import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen3.
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen4.dart';
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen5.dart';
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen6.dart';
-// import 'package:rashtraveer/feature/video_library/presentation/video_library_screen.dart';
+// import 'package:rashtraveer/feature/main_application/chat/presentation/groups/group_members_screen.dart';
 
 import 'package:rashtraveer/feature/main_application/main_app_screen.dart';
 
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       title: 'Rashtraveer',
       debugShowCheckedModeBanner: false,
 
-      // home: const VideoLibraryScreen(),
+      // home: const GroupMembersScreen(),
       initialRoute: SplashScreen.routeName,
 
       routes: {
