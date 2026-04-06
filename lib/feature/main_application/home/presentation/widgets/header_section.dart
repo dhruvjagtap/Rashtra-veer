@@ -41,14 +41,14 @@ class HeaderSection extends StatelessWidget {
                   Text(
                     greeting,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.95),
+                      color: Colors.white.withValues(alpha: 0.95),
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Icon(
                     Icons.language,
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     size: 22,
                   ),
                 ],
@@ -68,7 +68,7 @@ class HeaderSection extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(

@@ -41,7 +41,6 @@ class LeaderboardScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: _buildBottomNavBar(context),
     );
   }
 
@@ -92,13 +91,17 @@ class LeaderboardScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withValues(alpha: 0.9),
                 ),
               ),
             ],
           ),
         ),
-        Icon(Icons.more_horiz, color: Colors.white.withOpacity(0.9), size: 24),
+        Icon(
+          Icons.more_horiz,
+          color: Colors.white.withValues(alpha: 0.9),
+          size: 24,
+        ),
       ],
     );
   }
@@ -112,7 +115,7 @@ class LeaderboardScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -170,10 +173,7 @@ class LeaderboardScreen extends StatelessWidget {
             ),
             Text(
               'Leaderboard Rank',
-              style: TextStyle(
-                fontSize: 12,
-                color: _violetLight,
-              ),
+              style: TextStyle(fontSize: 12, color: _violetLight),
             ),
           ],
         ),
@@ -201,10 +201,7 @@ class LeaderboardScreen extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   'Daily Streak',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey[700],
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                 ),
               ],
             ),
@@ -224,7 +221,7 @@ class LeaderboardScreen extends StatelessWidget {
           child: LinearProgressIndicator(
             value: 7 / 30,
             minHeight: 8,
-            backgroundColor: _violetLight.withOpacity(0.3),
+            backgroundColor: _violetLight.withValues(alpha: 0.3),
             valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
           ),
         ),
@@ -249,10 +246,7 @@ class LeaderboardScreen extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     'Challenges Completed',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[700],
-                    ),
+                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                   ),
                 ],
               ),
@@ -267,10 +261,7 @@ class LeaderboardScreen extends StatelessWidget {
               ),
               Text(
                 'Challenge Progress',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: _violetLight,
-                ),
+                style: TextStyle(fontSize: 12, color: _violetLight),
               ),
             ],
           ),
@@ -316,10 +307,7 @@ class LeaderboardScreen extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               'Total Points:',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[700],
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.grey[700]),
             ),
           ],
         ),
@@ -339,7 +327,7 @@ class LeaderboardScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
+        color: Colors.white.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -349,7 +337,7 @@ class LeaderboardScreen extends StatelessWidget {
             'Leaderboard Rank',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -357,70 +345,18 @@ class LeaderboardScreen extends StatelessWidget {
             width: 1,
             height: 20,
             margin: const EdgeInsets.symmetric(horizontal: 16),
-            color: Colors.white.withOpacity(0.5),
+            color: Colors.white.withValues(alpha: 0.5),
           ),
           Text(
             'Consistency Score',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               fontWeight: FontWeight.w500,
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildBottomNavBar(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(Icons.home_outlined, 'Home', false),
-              _buildNavItem(Icons.directions_run_outlined, 'Activity', false),
-              _buildNavItem(Icons.play_circle_outline, 'Resources', false),
-              _buildNavItem(Icons.chat_bubble_outline, 'Chat', false),
-              _buildNavItem(Icons.bar_chart, 'Rank', true),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem(IconData icon, String label, bool isSelected) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          size: 24,
-          color: isSelected ? _violetPrimary : Colors.grey[600],
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-            color: isSelected ? _violetPrimary : Colors.grey[600],
-          ),
-        ),
-      ],
     );
   }
 }

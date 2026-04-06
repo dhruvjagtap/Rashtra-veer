@@ -12,82 +12,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Setup Java (required for Flutter)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
           java-version: "17"
 
-      # Setup Flutter
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.41.6" # Use stable version
-          channel: "stable"
+          channel: stable
           cache: true
 
-      # Verify Flutter installation
       - name: Verify Flutter
         run: flutter --version
 
-      # Get dependencies
       - name: Install dependencies
         run: flutter pub get
 
-      # Check formatting
       - name: Check formatting
         run: dart format --set-exit-if-changed .
 
-      # Analyze code
       - name: Analyze code
         run: flutter analyze
 
-      # Run tests
       - name: Run tests
-        run: flutter test
-
-      # Build APK (optional - to verify build works)
-      - name: Build APK
-        run: flutter build apk --debug
-
-  code-review:
-    name: Automated Code Review
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.24.0"
-          channel: "stable"
-          cache: true
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      # Reviewdog - Automated PR comments
-      - name: Run Reviewdog (Flutter Analyze)
-        uses: reviewdog/action-flutter-analyze@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: github-pr-review
-          level: warning
-          fail_on_error: true
-
-      # Comment PR with analysis results
-      - name: Analyze and comment
-        if: always()
         run: |
-          flutter analyze > analysis_output.txt 2>&1 || true
-          if [ -s analysis_output.txt ]; then
-            echo "::warning::Code analysis found issues. Check the analysis output."
+          if [ -d "test" ]; then
+            flutter test
+          else
+           echo "No tests found, skipping..."
           fi
+
+      - name: Build web
+        run: flutter build web

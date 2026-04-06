@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:rashtraveer/feature/main_application/main_app_screen.dart';
 import 'package:rashtraveer/feature/onboarding/widgets/top_section.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,7 +46,7 @@ class _OnBoardingScreen6State extends State<OnBoardingScreen6> {
     await prefs.setBool('isProfileComplete', true);
 
     // ignore: use_build_context_synchronously
-    Navigator.pushReplacementNamed(context, '/home');
+    Navigator.pushReplacementNamed(context, MainAppScreen.routeName);
   }
 
   @override
