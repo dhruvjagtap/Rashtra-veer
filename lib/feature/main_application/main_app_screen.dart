@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:rashtraveer/feature/main_application/resources/presentation/resources_screen.dart';
 import 'package:rashtraveer/feature/main_application/chat/presentation/chat_home_screen.dart';
 import 'package:rashtraveer/feature/main_application/home/presentation/home_screen.dart';
 import 'package:rashtraveer/feature/main_application/leaderboard/presentation/leaderboard_screen.dart';
@@ -59,17 +59,3 @@ class _MainAppScreenState extends State<MainAppScreen> {
   }
 }
 
-/// Placeholder until the Resources feature is implemented.
-class ResourcesScreen extends StatelessWidget {
-  const ResourcesScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFFAFAF8),
-      body: Center(
-        child: Text('Resources', style: Theme.of(context).textTheme.titleLarge),
-      ),
-    );
-  }
-}
