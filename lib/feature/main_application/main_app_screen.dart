@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rashtraveer/feature/main_application/chat/presentation/chat_home_screen.dart';
 import 'package:rashtraveer/feature/main_application/home/presentation/home_screen.dart';
 import 'package:rashtraveer/feature/main_application/leaderboard/presentation/leaderboard_screen.dart';
+import 'package:rashtraveer/feature/main_application/activity/presentation/activity_screen.dart';
 
 /// Shell with [BottomNavigationBar] and [IndexedStack] for main app tabs.
 class MainAppScreen extends StatefulWidget {
@@ -53,21 +54,6 @@ class _MainAppScreenState extends State<MainAppScreen> {
             label: 'Rank',
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// Placeholder until the Activity feature is implemented.
-class ActivityScreen extends StatelessWidget {
-  const ActivityScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFFAFAF8),
-      body: Center(
-        child: Text('Activity', style: Theme.of(context).textTheme.titleLarge),
       ),
     );
   }
