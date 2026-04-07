@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../profile/presentation/edit_profile_screen.dart';
 import 'stats_card.dart';
 
 /// Header section with gradient background, greeting, user name, and stats card.
@@ -65,7 +66,9 @@ class HeaderSection extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Container(
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, EditProfileScreen.routeName),
+                  child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.2),
@@ -76,6 +79,7 @@ class HeaderSection extends StatelessWidget {
                       color: Colors.white,
                       size: 24,
                     ),
+                  ),
                   ),
                 ],
               ),

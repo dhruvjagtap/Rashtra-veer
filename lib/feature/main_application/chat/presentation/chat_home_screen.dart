@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'chat_screen.dart';
 import 'widgets/chat_list_item.dart';
 
 class ChatHomeScreen extends StatelessWidget {
@@ -51,7 +52,6 @@ class ChatHomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: _screenBg,
 
-      // ✅ CORRECT PLACE
       appBar: AppBar(
         backgroundColor: _screenBg,
         elevation: 0,
@@ -65,8 +65,6 @@ class ChatHomeScreen extends StatelessWidget {
         ),
         centerTitle: false,
       ),
-
-      // ❌ Removed SafeArea (AppBar handles it)
       body: Column(
         children: [
           Padding(
@@ -120,7 +118,10 @@ class ChatHomeScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => ChatScreen(title: item.name),
+                          builder: (_) => ChatScreen(
+                            title: item.name,
+                            subtitle: 'Online',
+                          ),
                         ),
                       );
                     },
@@ -147,32 +148,4 @@ class _ChatPreview {
   final String message;
   final String timeLabel;
   final int unreadCount;
-}
-
-class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key, required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          title,
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
-      body: Center(
-        child: Text(
-          'Chat screen placeholder',
-          style: theme.textTheme.bodyLarge,
-        ),
-      ),
-    );
-  }
 }
