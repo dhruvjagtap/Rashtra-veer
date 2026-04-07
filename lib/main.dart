@@ -15,10 +15,9 @@ import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen6.
 
 import 'package:rashtraveer/feature/main_application/main_app_screen.dart';
 
-import 'package:rashtraveer/feature/main_application/main_app_screen.dart';
 
-import 'package:rashtraveer/feature/main_application/main_app_screen.dart';
 
+import 'feature/profile/presentation/edit_profile_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -52,7 +51,7 @@ class MyApp extends StatelessWidget {
         OnBoardingScreen4.routeName: (context) => const OnBoardingScreen4(),
         OnBoardingScreen5.routeName: (context) => const OnBoardingScreen5(),
         OnBoardingScreen6.routeName: (context) => const OnBoardingScreen6(),
-
+        EditProfileScreen.routeName: (context) => const EditProfileScreen(),
         MainAppScreen.routeName: (context) => const MainAppScreen(),
       },
     );
