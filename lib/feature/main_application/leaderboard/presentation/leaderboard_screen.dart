@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rashtraveer/feature/gamification/presentation/badges_screen.dart';
+
 
 /// Fitness leaderboard screen with performance metrics and violet gradient theme.
 class LeaderboardScreen extends StatelessWidget {
@@ -22,7 +24,7 @@ class LeaderboardScreen extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              _buildHeader(),
+              _buildHeader(context),
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -44,10 +46,11 @@ class LeaderboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             'Leader Board',
@@ -57,6 +60,14 @@ class LeaderboardScreen extends StatelessWidget {
               color: Colors.white,
             ),
           ),
+          GestureDetector(
+            onTap:() => Navigator.pushNamed(context, BadgesScreen.routeName),
+            child: const Icon(
+              Icons.military_tech_rounded,
+              color: Colors.white,
+              size: 28,
+            )
+          )
         ],
       ),
     );

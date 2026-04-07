@@ -17,6 +17,8 @@ import 'package:rashtraveer/feature/main_application/main_app_screen.dart';
 
 
 
+import 'feature/gamification/presentation/badges_screen.dart';
+import 'feature/onboarding/presentation/payment_screen.dart';
 import 'feature/profile/presentation/edit_profile_screen.dart';
 import 'firebase_options.dart';
 
@@ -52,7 +54,16 @@ class MyApp extends StatelessWidget {
         OnBoardingScreen5.routeName: (context) => const OnBoardingScreen5(),
         OnBoardingScreen6.routeName: (context) => const OnBoardingScreen6(),
         EditProfileScreen.routeName: (context) => const EditProfileScreen(),
+        BadgesScreen.routeName: (context) => const BadgesScreen(),
         MainAppScreen.routeName: (context) => const MainAppScreen(),
+
+        PaymentScreen.routeName: (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map;
+          return PaymentScreen(
+            planTitle: args['planTitle'],
+            planPrice: args['planPrice'],
+          );
+        },
       },
     );
   }

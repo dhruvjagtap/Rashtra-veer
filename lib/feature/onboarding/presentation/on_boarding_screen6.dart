@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:rashtraveer/feature/main_application/main_app_screen.dart';
 import 'package:rashtraveer/feature/onboarding/widgets/top_section.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:rashtraveer/feature/onboarding/presentation/payment_screen.dart';
 
 class OnBoardingScreen6 extends StatefulWidget {
   static const routeName = '/onBoardingScreen6';
@@ -39,14 +38,16 @@ class _OnBoardingScreen6State extends State<OnBoardingScreen6> {
     super.dispose();
   }
 
-  void _finishOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    await prefs.setBool('isLoggedIn', true);
-    await prefs.setBool('isProfileComplete', true);
-
-    // ignore: use_build_context_synchronously
-    Navigator.pushReplacementNamed(context, MainAppScreen.routeName);
+  void _finishOnboarding() {
+    final plan = plans[selectedPlanIndex];
+    Navigator.pushNamed(
+      context,
+      PaymentScreen.routeName,
+      arguments: {
+        'planTitle': plan['title'],
+        'planPrice': plan['price'],
+      },
+    );
   }
 
   @override
