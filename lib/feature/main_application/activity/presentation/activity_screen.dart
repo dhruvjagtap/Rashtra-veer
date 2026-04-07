@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'activity_summary_screen.dart';
 
 class ActivityScreen extends StatelessWidget {
   const ActivityScreen({super.key});
@@ -79,47 +80,97 @@ class HeaderSection extends StatelessWidget {
 
 //////////////////////////////////////////////////////////////
 /// PROGRESS CIRCLE
-//////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 
 class ProgressSection extends StatelessWidget {
   const ProgressSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          SizedBox(
-            height: 140,
-            width: 140,
-            child: CircularProgressIndicator(
-              value: 0.65,
-              strokeWidth: 10,
-              backgroundColor: Colors.grey.shade200,
-              valueColor: const AlwaysStoppedAnimation(
-                ActivityScreen.primaryColor,
+    return Column(
+      children: [
+        /// ANIMATED PROGRESS CIRCLE
+        TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0, end: 0.65),
+          duration: const Duration(seconds: 1),
+          builder: (context, value, _) {
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  height: 180,
+                  width: 180,
+                  child: CircularProgressIndicator(
+                    value: value,
+                    strokeWidth: 12,
+                    strokeCap: StrokeCap.round,
+                    backgroundColor: Colors.grey.shade200,
+                    valueColor: const AlwaysStoppedAnimation(
+                      ActivityScreen.primaryColor,
+                    ),
+                  ),
+                ),
+
+                /// CENTER TEXT
+                const Column(
+                  children: [
+                    Text(
+                      "65%",
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      "COMPLETE",
+                      style: TextStyle(
+                        fontSize: 12,
+                        letterSpacing: 1.2,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        ),
+
+        const SizedBox(height: 20),
+
+        /// CLICKABLE BUTTON
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ActivitySummaryScreen(),
+              ),
+            );
+          },
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            decoration: BoxDecoration(
+              color: ActivityScreen.primaryColor.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: const Center(
+              child: Text(
+                "View Full Summary",
+                style: TextStyle(
+                  color: ActivityScreen.primaryColor,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
-          const Column(
-            children: [
-              Text(
-                "65%",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text("Complete", style: TextStyle(color: Colors.grey)),
-            ],
-          )
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
-
 //////////////////////////////////////////////////////////////
 /// STATS (STREAK / TASKS / POINTS)
 //////////////////////////////////////////////////////////////
@@ -186,13 +237,6 @@ class ActionPlanSection extends StatelessWidget {
             Text(
               "Today's Action Plan",
               style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(
-              "VIEW ALL",
-              style: TextStyle(
-                color: ActivityScreen.primaryColor,
-                fontSize: 12,
-              ),
             ),
           ],
         ),
