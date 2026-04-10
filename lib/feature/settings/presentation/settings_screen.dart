@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'widgets/profile_tile.dart';
 import 'widgets/setting_item.dart';
 import 'widgets/logout_tile.dart';
+import '../../profile/presentation/edit_profile_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   static const String routeName = "/settings";
@@ -34,7 +35,7 @@ class SettingsScreen extends StatelessWidget {
             title: "Account",
             subtitle: "Edit profile, change number",
             onTap: () {
-              Navigator.pushNamed(context, AccountScreen.routeName);
+              Navigator.pushNamed(context, EditProfileScreen.routeName);
             },
           ),
 
