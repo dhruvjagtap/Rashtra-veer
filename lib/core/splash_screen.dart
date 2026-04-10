@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../feature/auth/presentation/login_screen.dart';
+import '../feature/main_application/main_app_screen.dart';
 import '../feature/onboarding/presentation/on_boarding_screen1.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -40,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
     } else if (!isProfileComplete) {
       Navigator.pushReplacementNamed(context, OnBoardingScreen1.routeName);
     } else {
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, MainAppScreen.routeName);
     }
   }
 

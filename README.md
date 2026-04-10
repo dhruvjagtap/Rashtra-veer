@@ -295,9 +295,9 @@ keytool -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore -sto
 
 ### Overview
 
-- **Total Screens:** 30
-- **Completed:** 14
-- **Pending:** 16
+- **Total Screens:** 27
+- **Completed:** 24
+- **Pending:** 3
 
 ---
 
@@ -323,6 +323,33 @@ keytool -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore -sto
 
 - [x] Home Dashboard
 - [x] Leaderboard Screen
+- [x] Activity Screen
+- [x] Chat Home Screen
+- [x] Messaging Screen
+- [x] Resources Screen
+
+### Content Module
+
+- [x] Video Library Screen
+- [x] Video Player Screen
+
+### Community Module
+
+- [x] Group List Screen
+
+### Activity Module
+
+- [x] Activity Tracking (Live GPS) (Not planned yer)
+- [x] Activity Summary Screen
+
+### Gamification
+
+- [x] Badges / Achievements Screen
+
+### Profile & Settings
+
+- [x] Edit Profile Screen
+- [x] Subscription / Payment Screen
 
 ### Content Module
 
@@ -333,40 +360,12 @@ keytool -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore -sto
 
 ## Pending Screens
 
-### Main Application (Core Navigation)
-
-- [ ] Activity Screen
-- [ ] Chat Home Screen
-- [ ] Messaging Screen
-- [ ] Resources Screen
-
-### Home Module
-
-- [ ] Task Details Screen
-- [ ] Progress / Streak Details Screen
-
-### Activity Module
-
-- [ ] Activity Tracking (Live GPS)
-- [ ] Activity Summary Screen
-
-### Chat Module
-
-- [ ] Chat Conversation Screen
-
 ### Community Module
 
-- [ ] Group List Screen
 - [ ] Create Group Screen
-
-### Gamification
-
-- [ ] Badges / Achievements Screen
 
 ### Profile & Settings
 
-- [ ] Edit Profile Screen
-- [ ] Subscription / Payment Screen
 - [ ] Certificate Upload / View Screen
 - [ ] Settings Screen
 
