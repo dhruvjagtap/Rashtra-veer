@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../profile/presentation/edit_profile_screen.dart';
+import '../../../../settings/presentation/settings_screen.dart';
 import 'stats_card.dart';
 
 /// Header section with gradient background, greeting, user name, and stats card.
@@ -47,10 +47,21 @@ class HeaderSection extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  Icon(
-                    Icons.language,
-                    color: Colors.white.withValues(alpha: 0.9),
-                    size: 22,
+                  GestureDetector(
+                    onTap: () =>
+                        Navigator.pushNamed(context, SettingsScreen.routeName),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.settings,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -66,21 +77,22 @@ class HeaderSection extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, EditProfileScreen.routeName),
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.person_outline,
-                      color: Colors.white,
-                      size: 24,
-                    ),
-                  ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () =>
+                  //       Navigator.pushNamed(context, SettingsScreen.routeName),
+                  //   child: Container(
+                  //     padding: const EdgeInsets.all(8),
+                  //     decoration: BoxDecoration(
+                  //       color: Colors.white.withValues(alpha: 0.2),
+                  //       shape: BoxShape.circle,
+                  //     ),
+                  //     child: const Icon(
+                  //       Icons.person_outline,
+                  //       color: Colors.white,
+                  //       size: 24,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
               const SizedBox(height: 20),

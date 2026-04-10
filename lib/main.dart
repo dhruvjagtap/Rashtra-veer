@@ -15,7 +15,7 @@ import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen6.
 
 import 'package:rashtraveer/feature/main_application/main_app_screen.dart';
 
-
+import "package:rashtraveer/feature/settings/presentation/settings_screen.dart";
 
 import 'feature/gamification/presentation/badges_screen.dart';
 import 'feature/onboarding/presentation/payment_screen.dart';
@@ -56,6 +56,7 @@ class MyApp extends StatelessWidget {
         EditProfileScreen.routeName: (context) => const EditProfileScreen(),
         BadgesScreen.routeName: (context) => const BadgesScreen(),
         MainAppScreen.routeName: (context) => const MainAppScreen(),
+        SettingsScreen.routeName: (context) => const SettingsScreen(),
 
         PaymentScreen.routeName: (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map;
