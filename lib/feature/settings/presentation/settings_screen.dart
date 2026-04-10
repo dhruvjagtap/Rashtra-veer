@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../profile/presentation/edit_profile_screen.dart';
-import 'widgets/profile_tile.dart';
-import 'widgets/setting_item.dart';
-import 'widgets/logout_tile.dart';
+import 'package:rashtraveer/feature/profile/presentation/edit_profile_screen.dart';
+import 'package:rashtraveer/feature/settings/presentation/widgets/setting_item.dart';
+import 'package:rashtraveer/feature/settings/presentation/widgets/logout_tile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rashtraveer/feature/auth/presentation/login_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   static const String routeName = "/settings";
@@ -22,11 +23,10 @@ class SettingsScreen extends StatelessWidget {
 
       body: ListView(
         children: [
-          const SizedBox(height: 10),
+          // const SizedBox(height: 10),
 
           /// PROFILE
-          const ProfileTile(),
-
+          // const ProfileTile(),
           const SizedBox(height: 10),
 
           /// SETTINGS ITEMS
@@ -76,9 +76,44 @@ class SettingsScreen extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          const LogoutTile(),
+          LogoutTile(onTap: () => _showLogoutDialog(context)),
         ],
       ),
     );
   }
+}
+
+void _showLogoutDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      title: const Text(
+        'Log Out',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      content: const Text('Are you sure you want to log out?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(ctx).pop(),
+          child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF6A66FF),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          onPressed: () async {
+            await FirebaseAuth.instance.signOut();
+            Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil(LoginScreen.routeName, (route) => false);
+          },
+          child: const Text('Log Out', style: TextStyle(color: Colors.white)),
+        ),
+      ],
+    ),
+  );
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rashtraveer/feature/profile/presentation/profile_screen.dart';
+import 'package:rashtraveer/feature/profile/presentation/edit_profile_screen.dart';
 
 class ProfileTile extends StatelessWidget {
   const ProfileTile({super.key});
@@ -12,11 +12,11 @@ class ProfileTile extends StatelessWidget {
         child: Icon(Icons.person, color: Colors.white),
       ),
       title: const Text("John Doe"),
-      subtitle: const Text("Stay consistent 💪"),
+      subtitle: const Text("Stay consistent"),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
 
       onTap: () {
-        Navigator.pushNamed(context, ProfileScreen.routeName);
+        Navigator.pushNamed(context, EditProfileScreen.routeName);
       },
     );
   }
