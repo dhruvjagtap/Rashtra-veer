@@ -295,9 +295,9 @@ keytool -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore -sto
 
 ### Overview
 
-- **Total Screens:** 27
-- **Completed:** 24
-- **Pending:** 3
+- **Total Screens:** 31
+- **Completed:** 29
+- **Pending:** 2
 
 ---
 
@@ -349,7 +349,12 @@ keytool -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore -sto
 ### Profile & Settings
 
 - [x] Edit Profile Screen
-- [x] Subscription / Payment Screen
+- [x] Payment Screen
+- [x] Certificate Upload / View Screen
+- [x] Settings Screen
+- [x] Health & Preferences Screen
+- [x] Activity & Tracking Settings Screen
+- [x] Help & Support
 
 ---
 
@@ -361,9 +366,8 @@ keytool -list -v -alias androiddebugkey -keystore ~/.android/debug.keystore -sto
 
 ### Profile & Settings
 
-- [ ] Certificate Upload / View Screen
-- [ ] Settings Screen
-
+- [ ] Subscription & Plan Details Screen
+      
 ## Git Workflow
 
 ```text
