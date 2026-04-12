@@ -21,6 +21,12 @@ import 'feature/gamification/presentation/badges_screen.dart';
 import 'feature/onboarding/presentation/payment_screen.dart';
 import 'feature/profile/presentation/edit_profile_screen.dart';
 import 'firebase_options.dart';
+import 'package:rashtraveer/feature/settings/presentation/certificate_screen.dart';
+import 'package:rashtraveer/feature/settings/presentation/help_support_screen.dart';
+import 'package:rashtraveer/feature/settings/presentation/profile_screen.dart';
+import 'package:rashtraveer/feature/settings/presentation/activity_settings_screen.dart';
+import 'package:rashtraveer/feature/settings/presentation/health_preferences_screen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,6 +63,11 @@ class MyApp extends StatelessWidget {
         BadgesScreen.routeName: (context) => const BadgesScreen(),
         MainAppScreen.routeName: (context) => const MainAppScreen(),
         SettingsScreen.routeName: (context) => const SettingsScreen(),
+        CertificateScreen.routeName: (context) => const CertificateScreen(),
+        HelpSupportScreen.routeName: (context) => const HelpSupportScreen(),
+        ProfileScreen.routeName: (context) => const ProfileScreen(),
+        ActivitySettingsScreen.routeName: (context) => const ActivitySettingsScreen(),
+        HealthPreferencesScreen.routeName: (context) => const HealthPreferencesScreen(),
 
         PaymentScreen.routeName: (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map;
@@ -69,3 +80,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:rashtraveer/feature/profile/presentation/edit_profile_screen.dart';
+import 'package:rashtraveer/feature/settings/presentation/help_support_screen.dart';
 import 'package:rashtraveer/feature/settings/presentation/widgets/setting_item.dart';
 import 'package:rashtraveer/feature/settings/presentation/widgets/logout_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rashtraveer/feature/auth/presentation/login_screen.dart';
+import 'package:rashtraveer/feature/settings/presentation/certificate_screen.dart';
+import 'package:rashtraveer/feature/settings/presentation/activity_settings_screen.dart';
+import 'package:rashtraveer/feature/settings/presentation/health_preferences_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   static const String routeName = "/settings";
@@ -39,18 +43,22 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
 
-          const SettingItem(
+          SettingItem(
             icon: Icons.favorite,
             title: "Health & Preferences",
             subtitle: "Height, weight, goals",
-            onTap: null,
+            onTap: () {
+              Navigator.pushNamed(context, HealthPreferencesScreen .routeName);
+            },
           ),
 
-          const SettingItem(
+          SettingItem(
             icon: Icons.directions_run,
             title: "Activity & Tracking",
             subtitle: "GPS, activity settings",
-            onTap: null,
+            onTap: () {
+              Navigator.pushNamed(context, ActivitySettingsScreen.routeName);
+            },
           ),
 
           const SettingItem(
@@ -60,18 +68,22 @@ class SettingsScreen extends StatelessWidget {
             onTap: null,
           ),
 
-          const SettingItem(
+          SettingItem(
             icon: Icons.verified,
             title: "Certificates",
             subtitle: "Upload & view certificates",
-            onTap: null,
+            onTap: () {
+              Navigator.pushNamed(context, CertificateScreen.routeName);
+            },
           ),
 
-          const SettingItem(
+          SettingItem(
             icon: Icons.help_outline,
             title: "Help & Support",
             subtitle: "FAQs, contact support",
-            onTap: null,
+             onTap: () {
+              Navigator.pushNamed(context, HelpSupportScreen.routeName);
+            },
           ),
 
           const SizedBox(height: 20),
