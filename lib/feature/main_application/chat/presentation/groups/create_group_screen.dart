@@ -141,7 +141,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     setState(() => _isCreating = true);
 
     try {
-      // TODO: replace with your actual backend call, e.g.:
+      // replace with your actual backend call, e.g.:
       // await FirebaseFirestore.instance.collection('groups').add({...});
       await Future.delayed(const Duration(milliseconds: 600)); // simulate network
 
