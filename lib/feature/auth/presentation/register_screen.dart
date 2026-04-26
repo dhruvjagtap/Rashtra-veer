@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rashtraveer/feature/auth/presentation/login_screen.dart';
-import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen1.dart';
+// import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen1.dart';
+import 'package:rashtraveer/feature/auth/data/auth_service.dart';
+import 'package:rashtraveer/feature/auth/presentation/verify_otp_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const routeName = '/register';
@@ -13,25 +15,55 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _firstName = TextEditingController();
   final _lastName = TextEditingController();
-  final _emailController = TextEditingController();
+  // final _emailController = TextEditingController();
   final _dobController = TextEditingController();
   final _phoneNumberController = TextEditingController();
-  final _passwordController = TextEditingController();
+  // final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? _selectedGender;
   String? _selectedBloodGroup;
   // final bool _obscurePassword = true;
   // final bool _isLoading = false;
   bool _acceptTerms = false;
+  final AuthService _authService = AuthService();
+
   @override
   void dispose() {
     _firstName.dispose();
     _lastName.dispose();
-    _emailController.dispose();
+    // _emailController.dispose();
     _dobController.dispose();
     _phoneNumberController.dispose();
-    _passwordController.dispose();
+    // _passwordController.dispose();
     super.dispose();
+  }
+
+  void _sendOtp() async {
+    final phoneNo = "+91${_phoneNumberController.text.trim()}";
+
+    await _authService.sendOtp(
+      phoneNumber: phoneNo,
+
+      onCodeSent: (verificationId) {
+        Navigator.pushNamed(
+          context,
+          VerifyOtpScreen.routeName,
+          arguments: {
+            "verificationId": verificationId,
+            "firstName": _firstName.text,
+            "lastName": _lastName.text,
+            "phone": phoneNo,
+            "dob": _dobController.text,
+            "gender": _selectedGender,
+            "bloodGroup": _selectedBloodGroup,
+          },
+        );
+      },
+
+      onError: (error) {
+        debugPrint(error);
+      },
+    );
   }
 
   @override
@@ -172,12 +204,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                           const SizedBox(height: 16),
 
-                          _buildInput(
-                            controller: _emailController,
-                            label: "Email",
-                            icon: Icons.email_outlined,
-                          ),
-
+                          // _buildInput(
+                          //   controller: _emailController,
+                          //   label: "Email",
+                          //   icon: Icons.email_outlined,
+                          // ),
                           const SizedBox(height: 16),
 
                           _buildInput(
@@ -227,17 +258,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                           const SizedBox(height: 16),
 
-                          _buildInput(
-                            controller: _passwordController,
-                            label: "Password",
-                            icon: Icons.lock_outline,
-                            obscure: true,
-                          ),
+                          // _buildInput(
+                          //   controller: _passwordController,
+                          //   label: "Password",
+                          //   icon: Icons.lock_outline,
+                          //   obscure: true,
+                          // ),
                           const SizedBox(height: 8),
 
                           Center(
                             child: SizedBox(
-                              width: 300, // 👈 control width (adjust as needed)
+                              width: 300,
                               child: Theme(
                                 data: Theme.of(context).copyWith(
                                   checkboxTheme: const CheckboxThemeData(
@@ -301,10 +332,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ? null
                                   : () async {
                                       if (_formKey.currentState!.validate()) {
-                                        Navigator.pushReplacementNamed(
-                                          context,
-                                          OnBoardingScreen1.routeName,
-                                        );
+                                        _sendOtp();
                                       }
                                     },
                               child: const Text(

@@ -43,6 +43,7 @@ dependencies:
   chewie: ^1.7.5
   file_picker: ^8.1.2
   image_picker: ^1.1.2
+  firebase_messaging: ^16.2.0
 
 dev_dependencies:
   flutter_test:

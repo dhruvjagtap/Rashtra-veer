@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rashtraveer/feature/auth/model/user_model.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
   static const routeName = '/verify-otp';
@@ -22,6 +26,85 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
   final FocusNode _focus4 = FocusNode();
   final FocusNode _focus5 = FocusNode();
   final FocusNode _focus6 = FocusNode();
+
+  late String verificationId;
+  late String firstName;
+  late String lastName;
+  late String phone;
+  late String dob;
+  late String? gender;
+  late String? bloodGroup;
+  late String role;
+
+  Future<String?> _getFcmToken() async {
+    return await FirebaseMessaging.instance.getToken();
+  }
+
+  Future<void> _saveUserToFirestore() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) return;
+
+    final token = await _getFcmToken();
+
+    final userModel = UserModel(
+      uid: user.uid,
+      firstName: firstName,
+      lastName: lastName,
+      phone: phone,
+      dob: dob,
+      gender: gender,
+      bloodGroup: bloodGroup,
+      role: role,
+      fcmToken: token,
+    );
+
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(user.uid)
+        .set(userModel.toMap());
+  }
+
+  void _verifyOtp() async {
+    String otp =
+        _otp1.text +
+        _otp2.text +
+        _otp3.text +
+        _otp4.text +
+        _otp5.text +
+        _otp6.text;
+
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: otp,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      await _saveUserToFirestore();
+
+      // Navigate forward
+    } catch (e) {
+      debugPrint("OTP Verification Failed: $e");
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+
+    verificationId = args["verificationId"];
+    firstName = args["firstName"];
+    lastName = args["lastName"];
+    phone = args["phone"];
+    dob = args["dob"];
+    gender = args["gender"];
+    bloodGroup = args["bloodGroup"];
+    role = "user";
+  }
 
   @override
   void dispose() {
@@ -71,6 +154,8 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
         onChanged: (value) {
           if (value.length == 1 && next != null) {
             next.requestFocus();
+          } else if (value.isEmpty) {
+            current.previousFocus();
           }
         },
       ),
@@ -108,8 +193,8 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
 
                     const SizedBox(height: 4),
 
-                    const Text(
-                      '+91 98765 43210',
+                    Text(
+                      phone,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -149,7 +234,9 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          _verifyOtp();
+                        },
                         child: const Text(
                           'Verify & Proceed',
                           style: TextStyle(

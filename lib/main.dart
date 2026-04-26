@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:rashtraveer/core/splash_screen.dart';
 import 'package:rashtraveer/feature/auth/presentation/login_screen.dart';
 import 'package:rashtraveer/feature/auth/presentation/register_screen.dart';
-import 'package:rashtraveer/feature/auth/presentation/verify_otp_scree.dart';
+import 'package:rashtraveer/feature/auth/presentation/verify_otp_screen.dart';
 
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen1.dart';
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen2.dart';
@@ -26,7 +26,6 @@ import 'package:rashtraveer/feature/settings/presentation/help_support_screen.da
 import 'package:rashtraveer/feature/settings/presentation/profile_screen.dart';
 import 'package:rashtraveer/feature/settings/presentation/activity_settings_screen.dart';
 import 'package:rashtraveer/feature/settings/presentation/health_preferences_screen.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,8 +65,10 @@ class MyApp extends StatelessWidget {
         CertificateScreen.routeName: (context) => const CertificateScreen(),
         HelpSupportScreen.routeName: (context) => const HelpSupportScreen(),
         ProfileScreen.routeName: (context) => const ProfileScreen(),
-        ActivitySettingsScreen.routeName: (context) => const ActivitySettingsScreen(),
-        HealthPreferencesScreen.routeName: (context) => const HealthPreferencesScreen(),
+        ActivitySettingsScreen.routeName: (context) =>
+            const ActivitySettingsScreen(),
+        HealthPreferencesScreen.routeName: (context) =>
+            const HealthPreferencesScreen(),
 
         PaymentScreen.routeName: (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map;
@@ -80,4 +81,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
