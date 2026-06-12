@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen6.dart';
 import 'package:rashtraveer/feature/onboarding/widgets/top_section.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rashtraveer/providers/onboarding_provider.dart';
 
-class OnBoardingScreen5 extends StatefulWidget {
+class OnBoardingScreen5 extends ConsumerStatefulWidget {
   static const routeName = '/onBoardingScreen5';
 
   const OnBoardingScreen5({super.key});
 
   @override
-  State<OnBoardingScreen5> createState() => _OnBoardingScreen5State();
+  ConsumerState<OnBoardingScreen5> createState() => _OnBoardingScreen5State();
 }
 
-class _OnBoardingScreen5State extends State<OnBoardingScreen5> {
+class _OnBoardingScreen5State extends ConsumerState<OnBoardingScreen5> {
   String selectedWorkout = "";
   String selectedTime = "";
 
@@ -23,6 +26,15 @@ class _OnBoardingScreen5State extends State<OnBoardingScreen5> {
   ];
 
   final times = ["Morning", "Afternoon", "Evening", "Flexible"];
+
+  void _saveStep5ToProvider() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    ref.read(onboardingProvider.notifier).updateWorkout(selectedWorkout);
+
+    ref.read(onboardingProvider.notifier).updateStep(5);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +225,18 @@ class _OnBoardingScreen5State extends State<OnBoardingScreen5> {
     return selectedWorkout.isNotEmpty && selectedTime.isNotEmpty;
   }
 
-  void _handleFinish() {
-    Navigator.pushNamed(context, OnBoardingScreen6.routeName);
+  Future<void> _handleFinish() async {
+    try {
+      _saveStep5ToProvider();
+      if (!mounted) return;
+      Navigator.pushNamed(context, OnBoardingScreen6.routeName);
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error saving data. Please try again.")),
+      );
+      debugPrint("Error in finishing onboarding: $e");
+    }
   }
 }

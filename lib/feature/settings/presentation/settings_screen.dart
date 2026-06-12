@@ -8,6 +8,7 @@ import 'package:rashtraveer/feature/auth/presentation/login_screen.dart';
 import 'package:rashtraveer/feature/settings/presentation/certificate_screen.dart';
 import 'package:rashtraveer/feature/settings/presentation/activity_settings_screen.dart';
 import 'package:rashtraveer/feature/settings/presentation/health_preferences_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatelessWidget {
   static const String routeName = "/settings";
@@ -48,7 +49,7 @@ class SettingsScreen extends StatelessWidget {
             title: "Health & Preferences",
             subtitle: "Height, weight, goals",
             onTap: () {
-              Navigator.pushNamed(context, HealthPreferencesScreen .routeName);
+              Navigator.pushNamed(context, HealthPreferencesScreen.routeName);
             },
           ),
 
@@ -81,7 +82,7 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.help_outline,
             title: "Help & Support",
             subtitle: "FAQs, contact support",
-             onTap: () {
+            onTap: () {
               Navigator.pushNamed(context, HelpSupportScreen.routeName);
             },
           ),
@@ -118,7 +119,19 @@ void _showLogoutDialog(BuildContext context) {
             ),
           ),
           onPressed: () async {
+            // Sign out from Firebase
             await FirebaseAuth.instance.signOut();
+
+            // Clear local app state
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setBool('isLoggedIn', false);
+            await prefs.setBool('isOnboardingCompleted', false);
+            await prefs.setBool('isPaymentCompleted', false);
+
+            // Close dialog
+            Navigator.of(ctx).pop();
+
+            // Navigate to Login
             Navigator.of(
               context,
             ).pushNamedAndRemoveUntil(LoginScreen.routeName, (route) => false);

@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rashtraveer/feature/main_application/main_app_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rashtraveer/providers/user_provider.dart';
+import 'package:rashtraveer/feature/auth/data/user_repository.dart';
 
-class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({super.key, required this.planTitle, required this.planPrice});
+class PaymentScreen extends ConsumerStatefulWidget {
+  const PaymentScreen({
+    super.key,
+    required this.planTitle,
+    required this.planPrice,
+  });
 
   static const routeName = '/payment';
 
@@ -11,22 +18,27 @@ class PaymentScreen extends StatefulWidget {
   final int planPrice;
 
   @override
-  State<PaymentScreen> createState() => _PaymentScreenState();
+  ConsumerState<PaymentScreen> createState() => _PaymentScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> {
+class _PaymentScreenState extends ConsumerState<PaymentScreen> {
   static const Color _primary = Color(0xFF7F7BFF);
 
   int _selectedMethod = 0; // 0 = UPI, 1 = Card, 2 = Net Banking
 
   final List<_PaymentMethod> _methods = const [
-    _PaymentMethod(icon: Icons.account_balance_wallet_rounded, label: 'UPI / Razorpay'),
-    _PaymentMethod(icon: Icons.credit_card_rounded, label: 'Credit / Debit Card'),
+    _PaymentMethod(
+      icon: Icons.account_balance_wallet_rounded,
+      label: 'UPI / Razorpay',
+    ),
+    _PaymentMethod(
+      icon: Icons.credit_card_rounded,
+      label: 'Credit / Debit Card',
+    ),
     _PaymentMethod(icon: Icons.account_balance_rounded, label: 'Net Banking'),
   ];
 
-  void _confirmPayment() async {
-    // Show loading
+  Future<void> _confirmPayment() async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -35,19 +47,46 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
     );
 
-    // Simulate payment processing
     await Future.delayed(const Duration(seconds: 2));
 
-    if (!mounted) return;
-    Navigator.of(context).pop(); // close loading
+    try {
+      final currentUser = ref.read(userProvider);
 
-    // Finish onboarding
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', true);
-    await prefs.setBool('isProfileComplete', true);
+      if (currentUser != null) {
+        await UserRepository().updatePaymentStatus(currentUser.uid, true);
 
-    if (!mounted) return;
-    Navigator.pushReplacementNamed(context, MainAppScreen.routeName);
+        ref.read(userProvider.notifier).updatePayment(true);
+      }
+
+      final prefs = await SharedPreferences.getInstance();
+      debugPrint('Shared Preferences: ');
+      prefs.getKeys().forEach((k) => debugPrint('$k: ${prefs.get(k)}'));
+      await prefs.setBool('isLoggedIn', true);
+      await prefs.setBool('isProfileComplete', true);
+
+      if (!mounted) return;
+
+      Navigator.of(context).pop();
+
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        MainAppScreen.routeName,
+        (_) => false,
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      Navigator.of(context).pop();
+
+      // Optional: log error only
+      debugPrint('Payment status update error: $e');
+
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        MainAppScreen.routeName,
+        (_) => false,
+      );
+    }
   }
 
   @override
@@ -91,10 +130,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 children: [
                   const Text(
                     'Order Summary',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 13,
-                    ),
+                    style: TextStyle(color: Colors.white70, fontSize: 13),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -108,10 +144,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   const SizedBox(height: 4),
                   Text(
                     '₹${widget.planPrice} / month',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ],
               ),
@@ -165,8 +198,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                       const Spacer(),
                       if (isSelected)
-                        const Icon(Icons.check_circle_rounded,
-                            color: _primary, size: 20),
+                        const Icon(
+                          Icons.check_circle_rounded,
+                          color: _primary,
+                          size: 20,
+                        ),
                     ],
                   ),
                 ),
@@ -188,10 +224,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 children: [
                   const Text(
                     'Total',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                   Text(
                     '₹${widget.planPrice}',
@@ -235,7 +268,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.lock_outline, size: 14, color: Colors.grey.shade500),
+                  Icon(
+                    Icons.lock_outline,
+                    size: 14,
+                    color: Colors.grey.shade500,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     'Secured by Razorpay',

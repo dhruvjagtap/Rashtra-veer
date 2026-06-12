@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:rashtraveer/core/splash_screen.dart';
 import 'package:rashtraveer/feature/auth/presentation/login_screen.dart';
 import 'package:rashtraveer/feature/auth/presentation/register_screen.dart';
-import 'package:rashtraveer/feature/auth/presentation/verify_otp_scree.dart';
+import 'package:rashtraveer/feature/auth/presentation/verify_otp_screen.dart';
 
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen1.dart';
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen2.dart';
@@ -11,12 +11,13 @@ import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen3.
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen4.dart';
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen5.dart';
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen6.dart';
+
 // import 'package:rashtraveer/feature/main_application/chat/presentation/groups/group_members_screen.dart';
 
 import 'package:rashtraveer/feature/main_application/main_app_screen.dart';
 
 import "package:rashtraveer/feature/settings/presentation/settings_screen.dart";
-
+import 'package:rashtraveer/widgets/no_internet_overlay.dart';
 import 'feature/gamification/presentation/badges_screen.dart';
 import 'feature/onboarding/presentation/payment_screen.dart';
 import 'feature/profile/presentation/edit_profile_screen.dart';
@@ -26,12 +27,12 @@ import 'package:rashtraveer/feature/settings/presentation/help_support_screen.da
 import 'package:rashtraveer/feature/settings/presentation/profile_screen.dart';
 import 'package:rashtraveer/feature/settings/presentation/activity_settings_screen.dart';
 import 'package:rashtraveer/feature/settings/presentation/health_preferences_screen.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -42,9 +43,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Rashtraveer',
       debugShowCheckedModeBanner: false,
-
       // home: const GroupMembersScreen(),
       initialRoute: SplashScreen.routeName,
+
+      builder: (context, child) {
+        return Stack(children: [child!, const NoInternetOverlay()]);
+      },
 
       routes: {
         SplashScreen.routeName: (context) => const SplashScreen(),
@@ -66,18 +70,22 @@ class MyApp extends StatelessWidget {
         CertificateScreen.routeName: (context) => const CertificateScreen(),
         HelpSupportScreen.routeName: (context) => const HelpSupportScreen(),
         ProfileScreen.routeName: (context) => const ProfileScreen(),
-        ActivitySettingsScreen.routeName: (context) => const ActivitySettingsScreen(),
-        HealthPreferencesScreen.routeName: (context) => const HealthPreferencesScreen(),
+        ActivitySettingsScreen.routeName: (context) =>
+            const ActivitySettingsScreen(),
+        HealthPreferencesScreen.routeName: (context) =>
+            const HealthPreferencesScreen(),
 
         PaymentScreen.routeName: (context) {
-          final args = ModalRoute.of(context)!.settings.arguments as Map;
+          final args =
+              ModalRoute.of(context)?.settings.arguments
+                  as Map<String, dynamic>?;
+
           return PaymentScreen(
-            planTitle: args['planTitle'],
-            planPrice: args['planPrice'],
+            planTitle: args?['planTitle'] ?? 'Popular',
+            planPrice: args?['planPrice'] ?? 200,
           );
         },
       },
     );
   }
 }
-
