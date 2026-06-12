@@ -1,20 +1,26 @@
+// lib/core/splash_screen.dart
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../feature/auth/presentation/login_screen.dart';
 import '../feature/main_application/main_app_screen.dart';
 import '../feature/onboarding/presentation/on_boarding_screen1.dart';
+import '../feature/auth/model/user_model.dart';
+import '../providers/user_provider.dart';
+import '../providers/repository_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rashtraveer/feature/onboarding/presentation/payment_screen.dart';
 
-class SplashScreen extends StatefulWidget {
+import 'package:firebase_auth/firebase_auth.dart';
+
+class SplashScreen extends ConsumerStatefulWidget {
   static const routeName = '/splash';
 
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
@@ -23,26 +29,86 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  void _checkUser() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    bool isProfileComplete = prefs.getBool('isProfileComplete') ?? false;
-
+  Future<void> _checkUser() async {
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
 
-    debugPrint("isLoggedIn: $isLoggedIn");
-    debugPrint("isProfileComplete: $isProfileComplete");
+    User? firebaseUser = FirebaseAuth.instance.currentUser;
 
-    if (!isLoggedIn) {
+    // User not logged in
+    if (firebaseUser == null) {
       Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-    } else if (!isProfileComplete) {
-      Navigator.pushReplacementNamed(context, OnBoardingScreen1.routeName);
-    } else {
-      Navigator.pushReplacementNamed(context, MainAppScreen.routeName);
+      return;
     }
+
+    // Refresh auth state
+    try {
+      await firebaseUser.reload();
+    } catch (_) {}
+
+    firebaseUser = FirebaseAuth.instance.currentUser;
+
+    // User deleted from Firebase Authentication
+    if (firebaseUser == null) {
+      Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+      return;
+    }
+
+    final repo = ref.read(userRepositoryProvider);
+
+    UserModel? user;
+
+    try {
+      user = await repo.getUser(firebaseUser.uid);
+    } catch (e) {
+      debugPrint('Error loading user: $e');
+
+      await FirebaseAuth.instance.signOut();
+
+      if (!mounted) return;
+
+      Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+
+      return;
+    }
+
+    // Firestore document missing
+    if (user == null) {
+      await FirebaseAuth.instance.signOut();
+
+      ref.read(userProvider.notifier).clearUser();
+
+      if (!mounted) return;
+
+      Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+
+      return;
+    }
+
+    // Save user globally
+    ref.read(userProvider.notifier).setUser(user);
+
+    if (!mounted) return;
+
+    // Onboarding pending
+    if (!(user.onboardingCompleted ?? false)) {
+      Navigator.pushReplacementNamed(context, OnBoardingScreen1.routeName);
+      return;
+    }
+
+    // Payment pending
+    if (!(user.paymentCompleted ?? false)) {
+      Navigator.pushReplacementNamed(
+        context,
+        PaymentScreen.routeName,
+        arguments: {'planTitle': 'Popular', 'planPrice': 200},
+      );
+      return;
+    }
+
+    // Everything completed
+    Navigator.pushReplacementNamed(context, MainAppScreen.routeName);
   }
 
   @override

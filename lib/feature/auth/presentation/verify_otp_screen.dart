@@ -1,145 +1,305 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rashtraveer/feature/auth/model/user_model.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// lib/feature/auth/presentation/verify_otp_screen.dart
 
-class VerifyOtpScreen extends StatefulWidget {
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:rashtraveer/feature/auth/data/auth_service.dart';
+import 'package:rashtraveer/feature/auth/model/user_model.dart';
+import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen1.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rashtraveer/providers/repository_provider.dart';
+import 'package:rashtraveer/feature/auth/presentation/register_screen.dart';
+import 'package:rashtraveer/providers/user_provider.dart';
+
+class VerifyOtpScreen extends ConsumerStatefulWidget {
   static const routeName = '/verify-otp';
   const VerifyOtpScreen({super.key});
 
   @override
-  State<VerifyOtpScreen> createState() => _VerifyOtpScreenState();
+  ConsumerState<VerifyOtpScreen> createState() => _VerifyOtpScreenState();
 }
 
-class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
-  final TextEditingController _otp1 = TextEditingController();
-  final TextEditingController _otp2 = TextEditingController();
-  final TextEditingController _otp3 = TextEditingController();
-  final TextEditingController _otp4 = TextEditingController();
-  final TextEditingController _otp5 = TextEditingController();
-  final TextEditingController _otp6 = TextEditingController();
+class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
+  final List<TextEditingController> _controllers = List.generate(
+    6,
+    (_) => TextEditingController(),
+  );
+  final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
 
-  final FocusNode _focus1 = FocusNode();
-  final FocusNode _focus2 = FocusNode();
-  final FocusNode _focus3 = FocusNode();
-  final FocusNode _focus4 = FocusNode();
-  final FocusNode _focus5 = FocusNode();
-  final FocusNode _focus6 = FocusNode();
+  String _verificationId = '';
+  String _firstName = '';
+  String _lastName = '';
+  String _phone = '';
+  String _dob = '';
+  String _language = 'English';
+  String? _gender;
+  String? _bloodGroup;
+  bool _isLogin = false;
+  PhoneAuthCredential? _autoCredential;
 
-  late String verificationId;
-  late String firstName;
-  late String lastName;
-  late String phone;
-  late String dob;
-  late String? gender;
-  late String? bloodGroup;
-  late String role;
+  bool _isVerifying = false;
+  bool _isResending = false;
 
-  Future<String?> _getFcmToken() async {
-    return await FirebaseMessaging.instance.getToken();
-  }
+  Timer? _timer;
+  int _secondsLeft = 30;
 
-  Future<void> _saveUserToFirestore() async {
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user == null) return;
-
-    final token = await _getFcmToken();
-
-    final userModel = UserModel(
-      uid: user.uid,
-      firstName: firstName,
-      lastName: lastName,
-      phone: phone,
-      dob: dob,
-      gender: gender,
-      bloodGroup: bloodGroup,
-      role: role,
-      fcmToken: token,
-    );
-
-    await FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.uid)
-        .set(userModel.toMap());
-  }
-
-  void _verifyOtp() async {
-    String otp =
-        _otp1.text +
-        _otp2.text +
-        _otp3.text +
-        _otp4.text +
-        _otp5.text +
-        _otp6.text;
-
-    try {
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: verificationId,
-        smsCode: otp,
-      );
-
-      await FirebaseAuth.instance.signInWithCredential(credential);
-
-      await _saveUserToFirestore();
-
-      // Navigate forward
-    } catch (e) {
-      debugPrint("OTP Verification Failed: $e");
-    }
-  }
+  final AuthService _authService = AuthService();
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
+    _startCountdown();
 
-    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _extractArgs();
+      if (_autoCredential != null) {
+        _verifyWithCredential(_autoCredential!);
+      }
+    });
+  }
 
-    verificationId = args["verificationId"];
-    firstName = args["firstName"];
-    lastName = args["lastName"];
-    phone = args["phone"];
-    dob = args["dob"];
-    gender = args["gender"];
-    bloodGroup = args["bloodGroup"];
-    role = "user";
+  Future<UserModel?> _loadUser(String uid) async {
+    final repo = ref.read(userRepositoryProvider);
+
+    return await repo.getUser(uid);
+  }
+
+  void _extractArgs() {
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+    if (args == null) return;
+
+    setState(() {
+      _verificationId = args['verificationId'] as String? ?? '';
+      _firstName = args['firstName'] as String? ?? '';
+      _lastName = args['lastName'] as String? ?? '';
+      _phone = args['phone'] as String? ?? '';
+      _dob = args['dob'] as String? ?? '';
+      _gender = args['gender'] as String?;
+      _bloodGroup = args['bloodGroup'] as String?;
+      _language = args['language'] as String? ?? 'English';
+      _isLogin = args['isLogin'] as bool? ?? false;
+      _autoCredential = args['autoCredential'] as PhoneAuthCredential?;
+    });
+  }
+
+  void _startCountdown() {
+    _secondsLeft = 30;
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+      if (_secondsLeft == 0) {
+        timer.cancel();
+        setState(() {});
+      } else {
+        setState(() => _secondsLeft--);
+      }
+    });
   }
 
   @override
   void dispose() {
-    _otp1.dispose();
-    _otp2.dispose();
-    _otp3.dispose();
-    _otp4.dispose();
-    _otp5.dispose();
-    _otp6.dispose();
-    _focus1.dispose();
-    _focus2.dispose();
-    _focus3.dispose();
-    _focus4.dispose();
-    _focus5.dispose();
-    _focus6.dispose();
+    _timer?.cancel();
+    for (final c in _controllers) {
+      c.dispose();
+    }
+    for (final f in _focusNodes) {
+      f.dispose();
+    }
     super.dispose();
   }
 
-  Widget buildOtpBox(
-    TextEditingController controller,
-    FocusNode current,
-    FocusNode? next,
-  ) {
+  String get _otp => _controllers.map((c) => c.text).join();
+
+  void _clearOtpBoxes() {
+    for (final c in _controllers) {
+      c.clear();
+    }
+    _focusNodes[0].requestFocus();
+  }
+
+  Future<String?> _getFcmToken() async {
+    return FirebaseMessaging.instance.getToken();
+  }
+
+  Future<void> _createUser() async {
+    final firebaseUser = FirebaseAuth.instance.currentUser;
+
+    if (firebaseUser == null) return;
+
+    final token = await _getFcmToken();
+
+    final user = UserModel(
+      uid: firebaseUser.uid,
+      firstName: _firstName,
+      lastName: _lastName,
+      phone: _phone,
+      dob: _dob,
+      gender: _gender,
+      bloodGroup: _bloodGroup,
+      role: 'user',
+      fcmToken: token,
+      language: _language,
+      createdAt: DateTime.now(),
+    );
+
+    final repo = ref.read(userRepositoryProvider);
+
+    await repo.createUser(user);
+
+    ref.read(userProvider.notifier).setUser(user);
+  }
+
+  Future<void> _navigateToNextScreen() async {
+    if (!mounted) return;
+
+    final firebaseUser = FirebaseAuth.instance.currentUser;
+
+    if (firebaseUser == null) return;
+
+    UserModel? user = ref.read(userProvider);
+
+    user ??= await _loadUser(firebaseUser.uid);
+
+    if (user != null) {
+      ref.read(userProvider.notifier).setUser(user);
+    }
+
+    // Login but user doc missing
+    if (user == null) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        RegisterScreen.routeName,
+        (_) => false,
+      );
+      return;
+    }
+
+    if (!(user.onboardingCompleted ?? false)) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        OnBoardingScreen1.routeName,
+        (_) => false,
+      );
+      return;
+    }
+
+    if (!(user.paymentCompleted ?? false)) {
+      Navigator.pushNamedAndRemoveUntil(context, '/payment', (_) => false);
+      return;
+    }
+
+    Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false);
+  }
+
+  Future<void> _verifyWithCredential(PhoneAuthCredential credential) async {
+    if (_isVerifying) return;
+    setState(() => _isVerifying = true);
+
+    try {
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      if (!_isLogin) {
+        await _createUser();
+      }
+
+      await _navigateToNextScreen();
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
+
+      setState(() => _isVerifying = false);
+
+      _clearOtpBoxes();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message ?? 'OTP verification failed. Try again.'),
+          backgroundColor: Colors.red.shade700,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() => _isVerifying = false);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          backgroundColor: Colors.red.shade700,
+        ),
+      );
+    }
+  }
+
+  Future<void> _verifyOtp() async {
+    if (_otp.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter all 6 digits'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    final credential = PhoneAuthProvider.credential(
+      verificationId: _verificationId,
+      smsCode: _otp,
+    );
+
+    await _verifyWithCredential(credential);
+  }
+
+  Future<void> _resendOtp() async {
+    if (_isResending) return;
+    setState(() => _isResending = true);
+
+    await _authService.resendOtp(
+      phoneNumber: _phone,
+      onCodeSent: (newVerificationId) {
+        if (!mounted) return;
+        setState(() {
+          _verificationId = newVerificationId;
+          _isResending = false;
+        });
+        _clearOtpBoxes();
+        _startCountdown();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('OTP sent again!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      },
+      onError: (error) {
+        if (!mounted) return;
+        setState(() => _isResending = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error), backgroundColor: Colors.red.shade700),
+        );
+      },
+    );
+  }
+
+  Widget _buildOtpBox(int index) {
     return SizedBox(
       width: 48,
       height: 55,
       child: TextField(
-        controller: controller,
-        focusNode: current,
+        controller: _controllers[index],
+        focusNode: _focusNodes[index],
         maxLength: 1,
         keyboardType: TextInputType.number,
         textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         decoration: InputDecoration(
-          counterText: "",
+          counterText: '',
           filled: true,
           fillColor: Colors.grey.shade100,
           border: OutlineInputBorder(
@@ -152,10 +312,17 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
           ),
         ),
         onChanged: (value) {
-          if (value.length == 1 && next != null) {
-            next.requestFocus();
+          if (value.length == 1) {
+            if (index < 5) {
+              FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+            } else {
+              _focusNodes[index].unfocus();
+              _verifyOtp();
+            }
           } else if (value.isEmpty) {
-            current.previousFocus();
+            if (index > 0) {
+              FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
+            }
           }
         },
       ),
@@ -164,6 +331,10 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Format seconds as MM:SS
+    final minutes = (_secondsLeft ~/ 60).toString().padLeft(2, '0');
+    final seconds = (_secondsLeft % 60).toString().padLeft(2, '0');
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -194,8 +365,8 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                     const SizedBox(height: 4),
 
                     Text(
-                      phone,
-                      style: TextStyle(
+                      _phone.isEmpty ? '...' : _phone,
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
@@ -205,22 +376,36 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        buildOtpBox(_otp1, _focus1, _focus2),
-                        buildOtpBox(_otp2, _focus2, _focus3),
-                        buildOtpBox(_otp3, _focus3, _focus4),
-                        buildOtpBox(_otp4, _focus4, _focus5),
-                        buildOtpBox(_otp5, _focus5, _focus6),
-                        buildOtpBox(_otp6, _focus6, null),
-                      ],
+                      children: List.generate(6, _buildOtpBox),
                     ),
 
                     const SizedBox(height: 24),
 
-                    const Text(
-                      'Resend code in 00:30',
-                      style: TextStyle(color: Colors.grey),
-                    ),
+                    if (_secondsLeft > 0)
+                      Text(
+                        'Resend code in $minutes:$seconds',
+                        style: const TextStyle(color: Colors.grey),
+                      )
+                    else
+                      _isResending
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Color(0xFF4C4A99),
+                              ),
+                            )
+                          : TextButton(
+                              onPressed: _resendOtp,
+                              child: const Text(
+                                'Resend OTP',
+                                style: TextStyle(
+                                  color: Color(0xFF4C4A99),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
 
                     const SizedBox(height: 32),
 
@@ -234,17 +419,24 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        onPressed: () {
-                          _verifyOtp();
-                        },
-                        child: const Text(
-                          'Verify & Proceed',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
+                        onPressed: _isVerifying ? null : _verifyOtp,
+                        child: _isVerifying
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Text(
+                                'Verify & Proceed',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
                       ),
                     ),
                   ],
