@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rashtraveer/feature/daily_task/data/constants/tasks_status.dart';
 
 // import '../constants/task_category.dart';
 // import '../constants/task_difficulty.dart';
@@ -14,7 +15,13 @@ class DailyTaskService {
   /// Create a single task
   Future<void> createTask(DailyTaskModel task) async {
     try {
-      await _taskCollection.add(task.toMap());
+      final docRef = _taskCollection.doc();
+
+      await docRef.set(
+        task.copyWith(
+          id: docRef.id,
+        ).toMap(),
+      );
     } on FirebaseException catch (e) {
       throw Exception("Failed to create task: ${e.message}");
     } catch (e) {
@@ -40,7 +47,7 @@ class DailyTaskService {
           category: "Workout",
           difficulty: "Easy",
           points: 20,
-          status: "pending",
+          status: TaskStatus.pending,
           assignedDate: now,
           dueDate: now.add(const Duration(hours: 12)),
           completedAt: null,
@@ -57,7 +64,7 @@ class DailyTaskService {
           category: "Meditation",
           difficulty: "Easy",
           points: 15,
-          status: "pending",
+          status: TaskStatus.pending,
           assignedDate: now,
           dueDate: now.add(const Duration(hours: 12)),
           completedAt: null,
@@ -74,7 +81,7 @@ class DailyTaskService {
           category: "Diet",
           difficulty: "Easy",
           points: 10,
-          status: "pending",
+          status: TaskStatus.pending,
           assignedDate: now,
           dueDate: now.add(const Duration(hours: 12)),
           completedAt: null,
@@ -91,7 +98,7 @@ class DailyTaskService {
           category: "Diet",
           difficulty: "Easy",
           points: 10,
-          status: "pending",
+          status: TaskStatus.pending,
           assignedDate: now,
           dueDate: now.add(const Duration(hours: 12)),
           completedAt: null,
@@ -108,7 +115,7 @@ class DailyTaskService {
           category: "Workout",
           difficulty: "Easy",
           points: 15,
-          status: "pending",
+          status: TaskStatus.pending,
           assignedDate: now,
           dueDate: now.add(const Duration(hours: 12)),
           completedAt: null,
@@ -165,5 +172,21 @@ class DailyTaskService {
         .toList(),
       );
 
+  }
+
+  // MARK COMPLETED 
+  /// Marks a task as completed
+  Future<void> markCompleted(String taskId) async {
+    try {
+      await _taskCollection.doc(taskId).update({
+        'status': TaskStatus.completed,
+        'completedAt': Timestamp.now(),
+        'updatedAt': Timestamp.now(),
+      });
+    } on FirebaseException catch (e) {
+      throw Exception("Failed to complete task: ${e.message}");
+    } catch (e) {
+      throw Exception("Unexpected error: $e");
+    }
   }
 }

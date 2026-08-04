@@ -22,4 +22,9 @@ class DailyTaskRepository {
   Stream<List<DailyTaskModel>> streamTodayTasks(String userId) {
     return _service.streamTodayTasks(userId);
   }
+
+  // mark complete
+  Future<void> markCompleted(String taskId) {
+    return _service.markCompleted(taskId);
+  }
 }

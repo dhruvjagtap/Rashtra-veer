@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:rashtraveer/feature/daily_task/data/constants/tasks_status.dart';
 import 'package:rashtraveer/feature/daily_task/data/models/daily_task_model.dart';
+import 'package:rashtraveer/feature/daily_task/data/repositories/daily_task_repository.dart';
 
 /// Today's task section with progress and task list.
 class TodaysTaskSection extends StatelessWidget {
@@ -93,7 +95,7 @@ class _TaskTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isCompleted =
-        task.status.toLowerCase() == "completed";
+        task.status == TaskStatus.completed;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -117,26 +119,37 @@ class _TaskTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-              color: isCompleted
-                  ? const Color(0xFF7F7BFF)
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(6),
-              border: Border.all(
-                color: const Color(0xFF7F7BFF),
-                width: 2,
+          GestureDetector(
+            onTap: isCompleted
+              ? null
+              : () async {
+                  try {
+                    await DailyTaskRepository().markCompleted(task.id);
+                  } catch (e) {
+                    debugPrint(e.toString());
+                  }
+                },
+            child: Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                color: isCompleted
+                    ? const Color(0xFF7F7BFF)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(
+                  color: const Color(0xFF7F7BFF),
+                  width: 2,
+                ),
               ),
+              child: isCompleted
+                  ? const Icon(
+                      Icons.check,
+                      size: 16,
+                      color: Colors.white,
+                    )
+                  : null,
             ),
-            child: isCompleted
-                ? const Icon(
-                    Icons.check,
-                    size: 16,
-                    color: Colors.white,
-                  )
-                : null,
           ),
 
           const SizedBox(width: 14),
