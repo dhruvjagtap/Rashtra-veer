@@ -27,4 +27,7 @@ class DailyTaskRepository {
   Future<void> markCompleted(String taskId) {
     return _service.markCompleted(taskId);
   }
+  
+  // Activity summary 
+  /*Stream<ActivitySummaryModel> streamActivitySummary(String userId)*/
 }

@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:rashtraveer/feature/video_library/presentation/video_library_screen.dart';
+import 'package:rashtraveer/feature/daily_task/data/constants/tasks_status.dart';
+import 'package:rashtraveer/feature/daily_task/data/models/task_subtask_model.dart';
 
 class ProgramDayCard extends StatelessWidget {
-  final ProgramDay day;
-  final bool isUnlocked;
+  final TaskSubtaskModel subtask;
   final VoidCallback onTap;
+  final dynamic isUnlocked;
 
   const ProgramDayCard({
     super.key,
-    required this.day,
+    required this.subtask,
     required this.isUnlocked,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    final bool isCompleted =
+        subtask.status == TaskStatus.completed;
+
+    final bool isUnlocked =
+        subtask.status != TaskStatus.locked;
+
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 300),
       opacity: isUnlocked ? 1 : 0.4,
@@ -36,7 +43,7 @@ class ProgramDayCard extends StatelessWidget {
           ),
           child: Row(
             children: [
-              /// Day Circle
+              /// Order Circle
               Container(
                 width: 44,
                 height: 44,
@@ -48,7 +55,7 @@ class ProgramDayCard extends StatelessWidget {
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                  "${day.dayNumber}",
+                  "${subtask.order}",
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -58,19 +65,25 @@ class ProgramDayCard extends StatelessWidget {
 
               const SizedBox(width: 14),
 
-              /// Text
+              /// Title & Description
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      day.title,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
+                      subtask.title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
+
                     const SizedBox(height: 4),
+
                     Text(
-                      day.duration,
-                      style: const TextStyle(color: Colors.grey),
+                      subtask.description,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                      ),
                     ),
                   ],
                 ),
@@ -78,11 +91,20 @@ class ProgramDayCard extends StatelessWidget {
 
               /// Status Icon
               if (!isUnlocked)
-                const Icon(Icons.lock, color: Colors.grey)
-              else if (day.isCompleted)
-                const Icon(Icons.check_circle, color: Colors.green)
+                const Icon(
+                  Icons.lock,
+                  color: Colors.grey,
+                )
+              else if (isCompleted)
+                const Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                )
               else
-                const Icon(Icons.play_circle_fill, color: Color(0xFF6A66FF)),
+                const Icon(
+                  Icons.play_circle_fill,
+                  color: Color(0xFF6A66FF),
+                ),
             ],
           ),
         ),

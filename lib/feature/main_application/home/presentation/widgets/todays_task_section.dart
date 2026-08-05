@@ -119,37 +119,26 @@ class _TaskTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: isCompleted
-              ? null
-              : () async {
-                  try {
-                    await DailyTaskRepository().markCompleted(task.id);
-                  } catch (e) {
-                    debugPrint(e.toString());
-                  }
-                },
-            child: Container(
-              width: 24,
-              height: 24,
-              decoration: BoxDecoration(
-                color: isCompleted
-                    ? const Color(0xFF7F7BFF)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(
-                  color: const Color(0xFF7F7BFF),
-                  width: 2,
-                ),
+          Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              color: isCompleted
+                  ? const Color(0xFF7F7BFF)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(
+                color: const Color(0xFF7F7BFF),
+                width: 2,
               ),
-              child: isCompleted
-                  ? const Icon(
-                      Icons.check,
-                      size: 16,
-                      color: Colors.white,
-                    )
-                  : null,
             ),
+            child: isCompleted
+                ? const Icon(
+                    Icons.check,
+                    size: 16,
+                    color: Colors.white,
+                  )
+                : null,
           ),
 
           const SizedBox(width: 14),
