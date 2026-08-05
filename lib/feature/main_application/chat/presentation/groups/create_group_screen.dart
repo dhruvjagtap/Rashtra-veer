@@ -115,7 +115,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   void _goToStep2() {
     if (_selected.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Select at least one member to continue.')),
+        const SnackBar(
+          content: Text('Select at least one member to continue.'),
+        ),
       );
       return;
     }
@@ -143,7 +145,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     try {
       // replace with your actual backend call, e.g.:
       // await FirebaseFirestore.instance.collection('groups').add({...});
-      await Future.delayed(const Duration(milliseconds: 600)); // simulate network
+      await Future.delayed(
+        const Duration(milliseconds: 600),
+      ); // simulate network
 
       // ── IMPORTANT: check mounted AFTER every await ─────────────────────
       // This is the fix for the "single core / thread" crash you were seeing.
@@ -157,17 +161,14 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       // Pop and return the result to the caller (ChatHomeScreen)
       Navigator.pop(
         context,
-        GroupResult(
-          name: name,
-          members: _selected.toList(),
-        ),
+        GroupResult(name: name, members: _selected.toList()),
       );
     } catch (e) {
       if (!mounted) return; // same guard after catch
       setState(() => _isCreating = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to create group: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to create group: $e')));
     }
   }
 
@@ -278,10 +279,13 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Search contacts…',
-                hintStyle: theme.textTheme.bodyMedium
-                    ?.copyWith(color: Colors.black38),
-                prefixIcon:
-                const Icon(Icons.search_rounded, color: Colors.black38),
+                hintStyle: theme.textTheme.bodyMedium?.copyWith(
+                  color: Colors.black38,
+                ),
+                prefixIcon: const Icon(
+                  Icons.search_rounded,
+                  color: Colors.black38,
+                ),
                 contentPadding: const EdgeInsets.symmetric(vertical: 13),
               ),
             ),
@@ -292,28 +296,29 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         Expanded(
           child: _filteredContacts.isEmpty
               ? Center(
-            child: Text(
-              'No contacts found.',
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(color: Colors.black38),
-            ),
-          )
+                  child: Text(
+                    'No contacts found.',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Colors.black38,
+                    ),
+                  ),
+                )
               : ListView.separated(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-            itemCount: _filteredContacts.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 8),
-            itemBuilder: (context, index) {
-              final contact = _filteredContacts[index];
-              final isSelected = _selected.contains(contact);
-              return _ContactTile2(
-                contact: contact,
-                isSelected: isSelected,
-                primary: _primary,
-                primaryLight: _primaryLight,
-                onTap: () => _toggleContact(contact),
-              );
-            },
-          ),
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                  itemCount: _filteredContacts.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 8),
+                  itemBuilder: (context, index) {
+                    final contact = _filteredContacts[index];
+                    final isSelected = _selected.contains(contact);
+                    return _ContactTile2(
+                      contact: contact,
+                      isSelected: isSelected,
+                      primary: _primary,
+                      primaryLight: _primaryLight,
+                      onTap: () => _toggleContact(contact),
+                    );
+                  },
+                ),
         ),
 
         // ── Bottom CTA ────────────────────────────────────────────────────
@@ -351,8 +356,11 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                       CircleAvatar(
                         radius: 44,
                         backgroundColor: _primaryLight,
-                        child:
-                        const Icon(Icons.group, color: _primary, size: 44),
+                        child: const Icon(
+                          Icons.group,
+                          color: _primary,
+                          size: 44,
+                        ),
                       ),
                       Positioned(
                         bottom: 0,
@@ -360,8 +368,11 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                         child: CircleAvatar(
                           radius: 14,
                           backgroundColor: _primary,
-                          child: const Icon(Icons.camera_alt,
-                              color: Colors.white, size: 16),
+                          child: const Icon(
+                            Icons.camera_alt,
+                            color: Colors.white,
+                            size: 16,
+                          ),
                         ),
                       ),
                     ],
@@ -396,15 +407,19 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     focusNode: _groupNameFocus,
                     maxLength: 50,
                     textCapitalization: TextCapitalization.words,
-                    style: theme.textTheme.bodyLarge
-                        ?.copyWith(color: _textDark),
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: _textDark,
+                    ),
                     decoration: InputDecoration(
                       hintText: 'e.g. Weekend Warriors',
-                      hintStyle: theme.textTheme.bodyLarge
-                          ?.copyWith(color: Colors.black38),
+                      hintStyle: theme.textTheme.bodyLarge?.copyWith(
+                        color: Colors.black38,
+                      ),
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 14),
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
                       counterText: '',
                     ),
                   ),
@@ -544,8 +559,7 @@ class _ContactTile2 extends StatelessWidget {
   }
 
   String _initials(String value) {
-    final parts =
-    value.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
+    final parts = value.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
     return parts.take(2).map((p) => p[0]).join().toUpperCase();
   }
 }
@@ -628,25 +642,28 @@ class _BottomBar extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: primary,
             disabledBackgroundColor: const Color(0xFFD8D6F7),
-            shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(26),
+            ),
             elevation: 0,
           ),
           child: isLoading
               ? const SizedBox(
-            width: 22,
-            height: 22,
-            child: CircularProgressIndicator(
-                color: Colors.white, strokeWidth: 2.5),
-          )
+                  width: 22,
+                  height: 22,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2.5,
+                  ),
+                )
               : Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-              fontSize: 15,
-            ),
-          ),
+                  label,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 15,
+                  ),
+                ),
         ),
       ),
     );

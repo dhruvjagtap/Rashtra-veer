@@ -106,8 +106,11 @@ class BadgesScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.workspace_premium_rounded,
-                      color: Colors.amber, size: 40),
+                  const Icon(
+                    Icons.workspace_premium_rounded,
+                    color: Colors.amber,
+                    size: 40,
+                  ),
                   const SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

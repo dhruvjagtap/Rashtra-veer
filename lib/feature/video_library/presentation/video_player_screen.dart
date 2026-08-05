@@ -73,11 +73,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Subtask Completed 🎉"),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Subtask Completed 🎉")));
 
       Navigator.pop(context);
     } catch (e) {
@@ -85,11 +83,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
 
       setState(() {
         _isLoading = false;
@@ -106,8 +102,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bool completed =
-        widget.subtask.status.toLowerCase() == "completed";
+    final bool completed = widget.subtask.status.toLowerCase() == "completed";
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -121,10 +116,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 children: [
                   IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                    ),
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
                   ),
                   Expanded(
                     child: Text(
@@ -145,22 +137,16 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               child: Center(
                 child: _chewieController == null
                     ? const CircularProgressIndicator()
-                    : Chewie(
-                        controller: _chewieController!,
-                      ),
+                    : Chewie(controller: _chewieController!),
               ),
             ),
 
             /// DESCRIPTION
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               child: Text(
                 widget.subtask.description,
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 16,
-                ),
+                style: const TextStyle(color: Colors.white70, fontSize: 16),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -172,9 +158,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton(
-                  onPressed: completed || _isLoading
-                      ? null
-                      : _markCompleted,
+                  onPressed: completed || _isLoading ? null : _markCompleted,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF6A66FF),
                     shape: RoundedRectangleBorder(
@@ -191,9 +175,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                           ),
                         )
                       : Text(
-                          completed
-                              ? "Completed"
-                              : "Mark as Completed",
+                          completed ? "Completed" : "Mark as Completed",
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

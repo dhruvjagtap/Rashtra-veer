@@ -5,17 +5,15 @@ import 'package:rashtraveer/feature/daily_task/data/repositories/daily_task_repo
 
 /// Today's task section with progress and task list.
 class TodaysTaskSection extends StatelessWidget {
-  const TodaysTaskSection({
-    super.key,
-    required this.tasks,
-  });
+  const TodaysTaskSection({super.key, required this.tasks});
 
   final List<DailyTaskModel> tasks;
 
   @override
   Widget build(BuildContext context) {
-    final completedCount =
-        tasks.where((task) => task.status.toLowerCase() == "completed").length;
+    final completedCount = tasks
+        .where((task) => task.status.toLowerCase() == "completed")
+        .length;
 
     final totalCount = tasks.length;
 
@@ -71,13 +69,7 @@ class TodaysTaskSection extends StatelessWidget {
                   ),
                 )
               : Column(
-                  children: tasks
-                      .map(
-                        (task) => _TaskTile(
-                          task: task,
-                        ),
-                      )
-                      .toList(),
+                  children: tasks.map((task) => _TaskTile(task: task)).toList(),
                 ),
         ),
       ],
@@ -86,29 +78,21 @@ class TodaysTaskSection extends StatelessWidget {
 }
 
 class _TaskTile extends StatelessWidget {
-  const _TaskTile({
-    required this.task,
-  });
+  const _TaskTile({required this.task});
 
   final DailyTaskModel task;
 
   @override
   Widget build(BuildContext context) {
-    final bool isCompleted =
-        task.status == TaskStatus.completed;
+    final bool isCompleted = task.status == TaskStatus.completed;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 14,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: Colors.grey.shade200,
-        ),
+        border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
@@ -123,21 +107,12 @@ class _TaskTile extends StatelessWidget {
             width: 24,
             height: 24,
             decoration: BoxDecoration(
-              color: isCompleted
-                  ? const Color(0xFF7F7BFF)
-                  : Colors.transparent,
+              color: isCompleted ? const Color(0xFF7F7BFF) : Colors.transparent,
               borderRadius: BorderRadius.circular(6),
-              border: Border.all(
-                color: const Color(0xFF7F7BFF),
-                width: 2,
-              ),
+              border: Border.all(color: const Color(0xFF7F7BFF), width: 2),
             ),
             child: isCompleted
-                ? const Icon(
-                    Icons.check,
-                    size: 16,
-                    color: Colors.white,
-                  )
+                ? const Icon(Icons.check, size: 16, color: Colors.white)
                 : null,
           ),
 
@@ -152,12 +127,8 @@ class _TaskTile extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: isCompleted
-                        ? Colors.grey.shade600
-                        : Colors.black87,
-                    decoration: isCompleted
-                        ? TextDecoration.lineThrough
-                        : null,
+                    color: isCompleted ? Colors.grey.shade600 : Colors.black87,
+                    decoration: isCompleted ? TextDecoration.lineThrough : null,
                   ),
                 ),
 
@@ -165,10 +136,7 @@ class _TaskTile extends StatelessWidget {
 
                 Text(
                   task.description,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade600,
-                  ),
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
                 ),
               ],
             ),
@@ -189,10 +157,7 @@ class _TaskTile extends StatelessWidget {
 
               Text(
                 task.category,
-                style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.grey.shade600,
-                ),
+                style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
               ),
             ],
           ),

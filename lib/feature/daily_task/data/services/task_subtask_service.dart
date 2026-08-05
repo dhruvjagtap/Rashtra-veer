@@ -11,9 +11,7 @@ class TaskSubtaskService {
   /// Returns subtask collection of a task
   //////////////////////////////////////////////////////////////
 
-  CollectionReference<Map<String, dynamic>> _subtaskCollection(
-    String taskId,
-  ) {
+  CollectionReference<Map<String, dynamic>> _subtaskCollection(String taskId) {
     return _firestore
         .collection('assigned_tasks')
         .doc(taskId)
@@ -26,9 +24,7 @@ class TaskSubtaskService {
 
   Future<void> createSubTask(TaskSubtaskModel subtask) async {
     try {
-      await _subtaskCollection(
-        subtask.taskId,
-      ).add(subtask.toMap());
+      await _subtaskCollection(subtask.taskId).add(subtask.toMap());
     } on FirebaseException catch (e) {
       throw Exception("Failed to create subtask: ${e.message}");
     } catch (e) {
@@ -40,17 +36,13 @@ class TaskSubtaskService {
   /// Stream subtasks
   //////////////////////////////////////////////////////////////
 
-  Stream<List<TaskSubtaskModel>> streamSubTasks(
-    String taskId,
-  ) {
+  Stream<List<TaskSubtaskModel>> streamSubTasks(String taskId) {
     return _subtaskCollection(taskId)
         .orderBy('order')
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
-              .map(
-                (doc) => TaskSubtaskModel.fromDocument(doc),
-              )
+              .map((doc) => TaskSubtaskModel.fromDocument(doc))
               .toList(),
         );
   }
@@ -70,16 +62,11 @@ class TaskSubtaskService {
         'updatedAt': Timestamp.now(),
       });
 
-      await unlockNextSubTask(
-        taskId: taskId,
-        currentSubtaskId: subtaskId,
-      );
+      await unlockNextSubTask(taskId: taskId, currentSubtaskId: subtaskId);
 
       await checkTaskCompletion(taskId);
     } on FirebaseException catch (e) {
-      throw Exception(
-        "Failed to complete subtask: ${e.message}",
-      );
+      throw Exception("Failed to complete subtask: ${e.message}");
     } catch (e) {
       throw Exception("Unexpected error: $e");
     }
@@ -94,15 +81,11 @@ class TaskSubtaskService {
     required String currentSubtaskId,
   }) async {
     try {
-      final snapshot = await _subtaskCollection(taskId)
-          .orderBy('order')
-          .get();
+      final snapshot = await _subtaskCollection(taskId).orderBy('order').get();
 
       final docs = snapshot.docs;
 
-      final currentIndex = docs.indexWhere(
-        (doc) => doc.id == currentSubtaskId,
-      );
+      final currentIndex = docs.indexWhere((doc) => doc.id == currentSubtaskId);
 
       if (currentIndex == -1) return;
 
@@ -119,9 +102,7 @@ class TaskSubtaskService {
         });
       }
     } on FirebaseException catch (e) {
-      throw Exception(
-        "Failed to unlock next subtask: ${e.message}",
-      );
+      throw Exception("Failed to unlock next subtask: ${e.message}");
     } catch (e) {
       throw Exception("Unexpected error: $e");
     }
@@ -131,25 +112,19 @@ class TaskSubtaskService {
   /// Check whether parent task is complete
   //////////////////////////////////////////////////////////////
 
-  Future<void> checkTaskCompletion(
-    String taskId,
-  ) async {
+  Future<void> checkTaskCompletion(String taskId) async {
     try {
       final snapshot = await _subtaskCollection(taskId).get();
 
       final allCompleted = snapshot.docs.every(
-        (doc) =>
-            doc['status'] ==
-            TaskStatus.completed,
+        (doc) => doc['status'] == TaskStatus.completed,
       );
 
       if (allCompleted) {
         await DailyTaskService().markCompleted(taskId);
       }
     } on FirebaseException catch (e) {
-      throw Exception(
-        "Failed to check task completion: ${e.message}",
-      );
+      throw Exception("Failed to check task completion: ${e.message}");
     } catch (e) {
       throw Exception("Unexpected error: $e");
     }

@@ -17,11 +17,7 @@ class DailyTaskService {
     try {
       final docRef = _taskCollection.doc();
 
-      await docRef.set(
-        task.copyWith(
-          id: docRef.id,
-        ).toMap(),
-      );
+      await docRef.set(task.copyWith(id: docRef.id).toMap());
     } on FirebaseException catch (e) {
       throw Exception("Failed to create task: ${e.message}");
     } catch (e) {
@@ -135,46 +131,33 @@ class DailyTaskService {
   }
 
   /// Fetch today's tasks for a user
-  Stream<List<DailyTaskModel>> streamTodayTasks(String userId)  {
-
+  Stream<List<DailyTaskModel>> streamTodayTasks(String userId) {
     final now = DateTime.now();
 
-    final startOfDay = DateTime(
-      now.year,
-      now.month,
-      now.day,
-    );
+    final startOfDay = DateTime(now.year, now.month, now.day);
 
-    final endOfDay = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      23,
-      59,
-      59,
-    );
+    final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
 
     return _taskCollection
-      .where('assignedTo', isEqualTo: userId)
-      .where(
-        'assignedDate',
-        isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
-      )
-      .where(
-        'assignedDate',
-        isLessThanOrEqualTo: Timestamp.fromDate(endOfDay),
-      )
-      .orderBy('assignedDate')
-      .snapshots()
-      .map(
-        (snapshot) => snapshot.docs
-        .map((doc) => DailyTaskModel.fromDocument(doc))
-        .toList(),
-      );
-
+        .where('assignedTo', isEqualTo: userId)
+        .where(
+          'assignedDate',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
+        )
+        .where(
+          'assignedDate',
+          isLessThanOrEqualTo: Timestamp.fromDate(endOfDay),
+        )
+        .orderBy('assignedDate')
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => DailyTaskModel.fromDocument(doc))
+              .toList(),
+        );
   }
 
-  // MARK COMPLETED 
+  // MARK COMPLETED
   /// Marks a task as completed
   Future<void> markCompleted(String taskId) async {
     try {

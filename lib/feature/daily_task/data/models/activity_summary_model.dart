@@ -13,6 +13,5 @@ class ActivitySummaryModel {
     required this.streak,
   });
 
-  double get progress =>
-      totalTasks == 0 ? 0 : completedTasks / totalTasks;
+  double get progress => totalTasks == 0 ? 0 : completedTasks / totalTasks;
 }

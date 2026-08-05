@@ -27,8 +27,7 @@ class ProfileScreen extends StatelessWidget {
               child: CircleAvatar(
                 radius: 45,
                 backgroundColor: const Color(0xFF6A66FF),
-                child: const Icon(Icons.person,
-                    size: 40, color: Colors.white),
+                child: const Icon(Icons.person, size: 40, color: Colors.white),
               ),
             ),
 
@@ -37,8 +36,7 @@ class ProfileScreen extends StatelessWidget {
             /// 🔹 PERSONAL INFO
             const Text(
               "Personal Info",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
 
             const SizedBox(height: 12),
@@ -92,8 +90,7 @@ class ProfileScreen extends StatelessWidget {
             /// 🔹 HEALTH INFO
             const Text(
               "Health Info",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
 
             const SizedBox(height: 12),
@@ -131,8 +128,7 @@ class ProfileScreen extends StatelessWidget {
             /// 🔹 FITNESS INFO
             const Text(
               "Fitness Info",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
 
             const SizedBox(height: 12),
@@ -186,13 +182,15 @@ class _DisplayCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label,
-                    style: const TextStyle(
-                        fontSize: 12, color: Colors.grey)),
+                Text(
+                  label,
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                ),
                 const SizedBox(height: 2),
-                Text(value,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w500)),
+                Text(
+                  value,
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
               ],
             ),
           ),

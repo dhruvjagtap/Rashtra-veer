@@ -19,10 +19,7 @@ class TaskSubtaskRepository {
     required String taskId,
     required String subtaskId,
   }) {
-    return _service.markSubTaskCompleted(
-      taskId: taskId,
-      subtaskId: subtaskId,
-    );
+    return _service.markSubTaskCompleted(taskId: taskId, subtaskId: subtaskId);
   }
 
   /// Unlock the next subtask

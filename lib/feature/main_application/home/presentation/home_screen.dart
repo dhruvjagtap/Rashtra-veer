@@ -28,15 +28,11 @@ class HomeScreen extends StatelessWidget {
               stream: DailyTaskRepository().streamTodayTasks(userId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 if (snapshot.hasError) {
-                  return Center(
-                    child: Text(snapshot.error.toString()),
-                  );
+                  return Center(child: Text(snapshot.error.toString()));
                 }
 
                 final tasks = snapshot.data ?? [];
@@ -47,9 +43,7 @@ class HomeScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       /// Today's Tasks (Now comes from Firestore)
-                      TodaysTaskSection(
-                        tasks: tasks,
-                      ),
+                      TodaysTaskSection(tasks: tasks),
 
                       const SizedBox(height: 24),
 

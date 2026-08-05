@@ -16,11 +16,9 @@ class ProgramDayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isCompleted =
-        subtask.status == TaskStatus.completed;
+    final bool isCompleted = subtask.status == TaskStatus.completed;
 
-    final bool isUnlocked =
-        subtask.status != TaskStatus.locked;
+    final bool isUnlocked = subtask.status != TaskStatus.locked;
 
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 300),
@@ -72,18 +70,14 @@ class ProgramDayCard extends StatelessWidget {
                   children: [
                     Text(
                       subtask.title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
 
                     const SizedBox(height: 4),
 
                     Text(
                       subtask.description,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                      ),
+                      style: const TextStyle(color: Colors.grey),
                     ),
                   ],
                 ),
@@ -91,20 +85,11 @@ class ProgramDayCard extends StatelessWidget {
 
               /// Status Icon
               if (!isUnlocked)
-                const Icon(
-                  Icons.lock,
-                  color: Colors.grey,
-                )
+                const Icon(Icons.lock, color: Colors.grey)
               else if (isCompleted)
-                const Icon(
-                  Icons.check_circle,
-                  color: Colors.green,
-                )
+                const Icon(Icons.check_circle, color: Colors.green)
               else
-                const Icon(
-                  Icons.play_circle_fill,
-                  color: Color(0xFF6A66FF),
-                ),
+                const Icon(Icons.play_circle_fill, color: Color(0xFF6A66FF)),
             ],
           ),
         ),

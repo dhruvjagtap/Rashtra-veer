@@ -20,8 +20,7 @@ class VideoLibraryScreen extends StatefulWidget {
   });
 
   @override
-  State<VideoLibraryScreen> createState() => 
-    _VideoLibraryScreenState();
+  State<VideoLibraryScreen> createState() => _VideoLibraryScreenState();
 }
 
 class _VideoLibraryScreenState extends State<VideoLibraryScreen> {
@@ -33,18 +32,12 @@ class _VideoLibraryScreenState extends State<VideoLibraryScreen> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: Center(child: CircularProgressIndicator()),
           );
         }
 
         if (snapshot.hasError) {
-          return Scaffold(
-            body: Center(
-              child: Text(snapshot.error.toString()),
-            ),
-          );
+          return Scaffold(body: Center(child: Text(snapshot.error.toString())));
         }
 
         final subtasks = snapshot.data ?? [];

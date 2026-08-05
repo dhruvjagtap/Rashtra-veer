@@ -40,8 +40,7 @@ class HelpSupportScreen extends StatelessWidget {
 
           _FaqItem(
             question: "How to upload certificate?",
-            answer:
-                "Go to Certificates → Upload → select file and submit.",
+            answer: "Go to Certificates → Upload → select file and submit.",
           ),
 
           _FaqItem(
@@ -87,10 +86,7 @@ class _FaqItem extends StatelessWidget {
   final String question;
   final String answer;
 
-  const _FaqItem({
-    required this.question,
-    required this.answer,
-  });
+  const _FaqItem({required this.question, required this.answer});
 
   @override
   Widget build(BuildContext context) {
@@ -99,10 +95,7 @@ class _FaqItem extends StatelessWidget {
       child: ExpansionTile(
         title: Text(question),
         children: [
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Text(answer),
-          ),
+          Padding(padding: const EdgeInsets.all(12), child: Text(answer)),
         ],
       ),
     );

@@ -302,9 +302,7 @@ class ActionCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => VideoLibraryScreen(
-              taskId: task.id,
-            ),
+            builder: (_) => VideoLibraryScreen(taskId: task.id),
           ),
         );
       },

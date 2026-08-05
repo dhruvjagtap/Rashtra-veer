@@ -57,14 +57,10 @@ class DailyTaskModel {
       status: data['status'] ?? 'pending',
       assignedDate:
           (data['assignedDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      dueDate:
-          (data['dueDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      completedAt:
-          (data['completedAt'] as Timestamp?)?.toDate(),
-      createdAt:
-          (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      updatedAt:
-          (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      dueDate: (data['dueDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      completedAt: (data['completedAt'] as Timestamp?)?.toDate(),
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 
@@ -81,8 +77,9 @@ class DailyTaskModel {
       'status': status,
       'assignedDate': Timestamp.fromDate(assignedDate),
       'dueDate': Timestamp.fromDate(dueDate),
-      'completedAt':
-          completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+      'completedAt': completedAt != null
+          ? Timestamp.fromDate(completedAt!)
+          : null,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
     };
