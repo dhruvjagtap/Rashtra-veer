@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rashtraveer/feature/daily_task/data/constants/tasks_status.dart';
 import 'package:rashtraveer/feature/daily_task/data/models/daily_task_model.dart';
-import 'package:rashtraveer/feature/daily_task/data/repositories/daily_task_repository.dart';
 
 /// Today's task section with progress and task list.
 class TodaysTaskSection extends StatelessWidget {
