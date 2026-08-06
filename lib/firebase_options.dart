@@ -85,5 +85,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'rashtra-veer.firebasestorage.app',
     measurementId: 'G-657YH0F4KE',
   );
-
 }

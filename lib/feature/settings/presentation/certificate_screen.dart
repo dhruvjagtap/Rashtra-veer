@@ -15,20 +15,11 @@ class _CertificateScreenState extends State<CertificateScreen> {
   String title = "";
   String type = "Medical";
 
-  final List<String> types = [
-    "Medical",
-    "Fitness",
-    "Yoga",
-    "Other"
-  ];
+  final List<String> types = ["Medical", "Fitness", "Yoga", "Other"];
 
   /// 🔥 Dummy list (replace with Firebase later)
   final List<Map<String, String>> certificates = [
-    {
-      "title": "Medical Certificate",
-      "type": "Medical",
-      "date": "12 Jan 2025"
-    },
+    {"title": "Medical Certificate", "type": "Medical", "date": "12 Jan 2025"},
   ];
 
   @override
@@ -51,8 +42,7 @@ class _CertificateScreenState extends State<CertificateScreen> {
             /// 🔥 UPLOAD SECTION
             const Text(
               "Upload Certificate",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: 16),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
 
             const SizedBox(height: 12),
@@ -68,8 +58,7 @@ class _CertificateScreenState extends State<CertificateScreen> {
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (val) => title = val,
-                    validator: (val) =>
-                        val!.isEmpty ? "Enter title" : null,
+                    validator: (val) => val!.isEmpty ? "Enter title" : null,
                   ),
 
                   const SizedBox(height: 12),
@@ -82,11 +71,9 @@ class _CertificateScreenState extends State<CertificateScreen> {
                       border: OutlineInputBorder(),
                     ),
                     items: types
-                        .map((e) => DropdownMenuItem(
-                            value: e, child: Text(e)))
+                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                         .toList(),
-                    onChanged: (val) =>
-                        setState(() => type = val!),
+                    onChanged: (val) => setState(() => type = val!),
                   ),
 
                   const SizedBox(height: 12),
@@ -107,14 +94,11 @@ class _CertificateScreenState extends State<CertificateScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color(0xFF6A66FF),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 14),
+                        backgroundColor: const Color(0xFF6A66FF),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
                       onPressed: () {
-                        if (_formKey.currentState!
-                            .validate()) {
+                        if (_formKey.currentState!.validate()) {
                           _addCertificate();
                         }
                       },
@@ -130,8 +114,7 @@ class _CertificateScreenState extends State<CertificateScreen> {
             /// 🔥 VIEW SECTION
             const Text(
               "Your Certificates",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold, fontSize: 16),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
 
             const SizedBox(height: 12),
@@ -147,13 +130,13 @@ class _CertificateScreenState extends State<CertificateScreen> {
                 return Card(
                   margin: const EdgeInsets.only(bottom: 10),
                   child: ListTile(
-                    leading: const Icon(Icons.picture_as_pdf,
-                        color: Color(0xFF6A66FF)),
+                    leading: const Icon(
+                      Icons.picture_as_pdf,
+                      color: Color(0xFF6A66FF),
+                    ),
                     title: Text(item["title"]!),
-                    subtitle: Text(
-                        "${item["type"]} • ${item["date"]}"),
-                    trailing:
-                        const Icon(Icons.visibility),
+                    subtitle: Text("${item["type"]} • ${item["date"]}"),
+                    trailing: const Icon(Icons.visibility),
                     onTap: () {
                       // TODO: open file
                     },
@@ -170,16 +153,12 @@ class _CertificateScreenState extends State<CertificateScreen> {
   /// 🔥 ADD CERTIFICATE (TEMP LOGIC)
   void _addCertificate() {
     setState(() {
-      certificates.add({
-        "title": title,
-        "type": type,
-        "date": "Today",
-      });
+      certificates.add({"title": title, "type": type, "date": "Today"});
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Uploaded")),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Uploaded")));
   }
 }
 
@@ -207,9 +186,7 @@ class _UploadBox extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Icon(icon,
-                size: 36,
-                color: const Color(0xFF6A66FF)),
+            Icon(icon, size: 36, color: const Color(0xFF6A66FF)),
             const SizedBox(height: 6),
             Text(title),
           ],

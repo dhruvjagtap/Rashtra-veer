@@ -78,8 +78,9 @@ class _ChatHomeScreenState extends State<ChatHomeScreen>
           unselectedLabelColor: Colors.black45,
           indicatorColor: _primary,
           indicatorWeight: 3,
-          labelStyle: theme.textTheme.titleSmall
-              ?.copyWith(fontWeight: FontWeight.w700),
+          labelStyle: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
           unselectedLabelStyle: theme.textTheme.titleSmall,
           tabs: [
             const Tab(text: 'Chats'),
@@ -92,7 +93,9 @@ class _ChatHomeScreenState extends State<ChatHomeScreen>
                     const SizedBox(width: 6),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: _primary,
                         borderRadius: BorderRadius.circular(10),
@@ -115,15 +118,15 @@ class _ChatHomeScreenState extends State<ChatHomeScreen>
       ),
       floatingActionButton: _onGroupsTab
           ? FloatingActionButton.extended(
-        backgroundColor: _primary,
-        foregroundColor: Colors.white,
-        icon: const Icon(Icons.group_add_rounded),
-        label: const Text(
-          'New Group',
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
-        onPressed: () => _openCreateGroup(context),
-      )
+              backgroundColor: _primary,
+              foregroundColor: Colors.white,
+              icon: const Icon(Icons.group_add_rounded),
+              label: const Text(
+                'New Group',
+                style: TextStyle(fontWeight: FontWeight.w700),
+              ),
+              onPressed: () => _openCreateGroup(context),
+            )
           : null,
       body: Column(
         children: [
@@ -145,12 +148,16 @@ class _ChatHomeScreenState extends State<ChatHomeScreen>
               child: TextField(
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText:
-                  _onGroupsTab ? 'Search groups...' : 'Search experts...',
-                  hintStyle: theme.textTheme.bodyMedium
-                      ?.copyWith(color: Colors.black45),
-                  prefixIcon:
-                  const Icon(Icons.search_rounded, color: Colors.black38),
+                  hintText: _onGroupsTab
+                      ? 'Search groups...'
+                      : 'Search experts...',
+                  hintStyle: theme.textTheme.bodyMedium?.copyWith(
+                    color: Colors.black45,
+                  ),
+                  prefixIcon: const Icon(
+                    Icons.search_rounded,
+                    color: Colors.black38,
+                  ),
                   contentPadding: const EdgeInsets.symmetric(vertical: 14),
                 ),
               ),
@@ -182,17 +189,14 @@ class _ChatHomeScreenState extends State<ChatHomeScreen>
     if (result == null) return;
 
     // addGroup() calls _notify() → _onStoreChanged() → setState() → rebuild
-    store.addGroup(
-      name: result.name,
-      memberCount: result.members.length,
-    );
+    store.addGroup(name: result.name, memberCount: result.members.length);
 
     navigator.push(
       MaterialPageRoute(
         builder: (_) => ChatScreen(
           title: result.name,
           subtitle:
-          '${result.members.length} member${result.members.length == 1 ? '' : 's'}',
+              '${result.members.length} member${result.members.length == 1 ? '' : 's'}',
           isGroup: true,
         ),
       ),
@@ -353,7 +357,11 @@ class _GroupListItem extends StatelessWidget {
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.white, width: 1.5),
                       ),
-                      child: const Icon(Icons.group, color: Colors.white, size: 9),
+                      child: const Icon(
+                        Icons.group,
+                        color: Colors.white,
+                        size: 9,
+                      ),
                     ),
                   ),
                 ],
@@ -378,7 +386,9 @@ class _GroupListItem extends StatelessWidget {
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 7, vertical: 2),
+                            horizontal: 7,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: primaryLight,
                             borderRadius: BorderRadius.circular(8),
@@ -399,8 +409,9 @@ class _GroupListItem extends StatelessWidget {
                       entry.lastMessage,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodyMedium
-                          ?.copyWith(color: Colors.black54),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: Colors.black54,
+                      ),
                     ),
                   ],
                 ),
@@ -420,7 +431,9 @@ class _GroupListItem extends StatelessWidget {
                   if (entry.unreadCount > 0)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 7, vertical: 3),
+                        horizontal: 7,
+                        vertical: 3,
+                      ),
                       decoration: const BoxDecoration(
                         color: Color(0xFF5F55E7),
                         shape: BoxShape.circle,
@@ -463,10 +476,9 @@ class _EmptyState extends StatelessWidget {
           Text(
             message,
             textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(color: Colors.black38),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.black38),
           ),
         ],
       ),

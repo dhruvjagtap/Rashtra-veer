@@ -10,8 +10,7 @@ class HealthPreferencesScreen extends StatefulWidget {
       _HealthPreferencesScreenState();
 }
 
-class _HealthPreferencesScreenState
-    extends State<HealthPreferencesScreen> {
+class _HealthPreferencesScreenState extends State<HealthPreferencesScreen> {
   double height = 175; // cm
   double weight = 72; // kg
   int age = 22;
@@ -76,8 +75,7 @@ class _HealthPreferencesScreenState
           _Tile(
             icon: Icons.favorite,
             title: "BMI",
-            value:
-                "${bmi.toStringAsFixed(1)} ($bmiStatus)",
+            value: "${bmi.toStringAsFixed(1)} ($bmiStatus)",
             valueColor: bmiColor,
             onTap: () {},
           ),
@@ -95,10 +93,10 @@ class _HealthPreferencesScreenState
             icon: Icons.people,
             title: "Gender",
             value: gender,
-            onTap: () => _editOptions(
-                ["Male", "Female", "Other"], gender, (val) {
-              setState(() => gender = val);
-            }),
+            onTap: () =>
+                _editOptions(["Male", "Female", "Other"], gender, (val) {
+                  setState(() => gender = val);
+                }),
           ),
 
           const Divider(),
@@ -111,10 +109,12 @@ class _HealthPreferencesScreenState
             title: "Goal",
             value: goal,
             onTap: () => _editOptions(
-                ["Weight Loss", "Muscle Gain", "Fitness"], goal,
-                (val) {
-              setState(() => goal = val);
-            }),
+              ["Weight Loss", "Muscle Gain", "Fitness"],
+              goal,
+              (val) {
+                setState(() => goal = val);
+              },
+            ),
           ),
 
           _Tile(
@@ -122,21 +122,22 @@ class _HealthPreferencesScreenState
             title: "Level",
             value: level,
             onTap: () => _editOptions(
-                ["Beginner", "Intermediate", "Advanced"],
-                level, (val) {
-              setState(() => level = val);
-            }),
+              ["Beginner", "Intermediate", "Advanced"],
+              level,
+              (val) {
+                setState(() => level = val);
+              },
+            ),
           ),
 
           _Tile(
             icon: Icons.directions_run,
             title: "Activity Level",
             value: activityLevel,
-            onTap: () => _editOptions(
-                ["Low", "Moderate", "High"],
-                activityLevel, (val) {
-              setState(() => activityLevel = val);
-            }),
+            onTap: () =>
+                _editOptions(["Low", "Moderate", "High"], activityLevel, (val) {
+                  setState(() => activityLevel = val);
+                }),
           ),
         ],
       ),
@@ -144,10 +145,8 @@ class _HealthPreferencesScreenState
   }
 
   /// 🔥 NUMBER INPUT DIALOG
-  void _editNumber(
-      String title, double current, Function(double) onSave) {
-    final controller =
-        TextEditingController(text: current.toString());
+  void _editNumber(String title, double current, Function(double) onSave) {
+    final controller = TextEditingController(text: current.toString());
 
     showDialog(
       context: context,
@@ -165,15 +164,18 @@ class _HealthPreferencesScreenState
               Navigator.pop(context);
             },
             child: const Text("Save"),
-          )
+          ),
         ],
       ),
     );
   }
 
   /// 🔥 OPTIONS PICKER
-  void _editOptions(List<String> options, String current,
-      Function(String) onSelect) {
+  void _editOptions(
+    List<String> options,
+    String current,
+    Function(String) onSelect,
+  ) {
     showModalBottomSheet(
       context: context,
       builder: (_) => Column(
@@ -193,6 +195,7 @@ class _HealthPreferencesScreenState
     );
   }
 }
+
 class _Tile extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -234,10 +237,7 @@ class _SectionTitle extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Text(
         title,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.grey,
-        ),
+        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
       ),
     );
   }
