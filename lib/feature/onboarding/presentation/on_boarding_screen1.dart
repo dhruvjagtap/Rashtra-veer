@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rashtraveer/providers/onboarding_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum BMIState { input, loading, result }
 
-class OnBoardingScreen1 extends StatefulWidget {
+class OnBoardingScreen1 extends ConsumerStatefulWidget {
   static const routeName = '/onBoardingScreen1';
   const OnBoardingScreen1({super.key});
 
   @override
-  State<OnBoardingScreen1> createState() => _OnBoardingScreen1State();
+  ConsumerState<OnBoardingScreen1> createState() => _OnBoardingScreen1State();
 }
 
-class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
+class _OnBoardingScreen1State extends ConsumerState<OnBoardingScreen1> {
   final TextEditingController heightController = TextEditingController(
     text: "170",
   );
@@ -49,6 +53,40 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
     return Colors.green;
   }
 
+  Future<void> _saveStep1ToProvider() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) return;
+
+    final height = double.tryParse(heightController.text) ?? 0;
+    final weight = double.tryParse(weightController.text) ?? 0;
+    final ageValue = int.tryParse(ageController.text) ?? 0;
+
+    final bmiValue = weight / ((height / 100) * (height / 100));
+
+    debugPrint('Height: $height');
+    debugPrint('Weight: $weight');
+    debugPrint('Age: $ageValue');
+    debugPrint('BMI: $bmiValue');
+
+    ref
+        .read(onboardingProvider.notifier)
+        .updateBasicInfo(
+          uid: user.uid,
+          height: height,
+          weight: weight,
+          gender: gender,
+          age: ageValue,
+          bmi: bmiValue,
+        );
+
+    ref.read(onboardingProvider.notifier).updateStep(1);
+
+    final prefs = await SharedPreferences.getInstance();
+    debugPrint('Shared Preferences: ');
+    prefs.getKeys().forEach((k) => debugPrint('$k: ${prefs.get(k)}'));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,9 +110,21 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
               child: SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  onPressed: () {
-                    // Navigate next
-                    Navigator.pushNamed(context, OnBoardingScreen2.routeName);
+                  // Replace your Next button onPressed with this
+                  onPressed: () async {
+                    try {
+                      await _saveStep1ToProvider();
+
+                      if (!mounted) return;
+
+                      Navigator.pushNamed(context, OnBoardingScreen2.routeName);
+                    } catch (e) {
+                      if (!mounted) return;
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to save data: $e')),
+                      );
+                    }
                   },
                   icon: const Icon(Icons.arrow_forward),
                   label: const Text("Next"),
@@ -117,21 +167,23 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
           children: [
             Expanded(
               child: _buildNumberInput(
-                title: "Height",
-                unit: "cm",
+                title: "Height (cm)",
+                // unit: "cm",
                 controller: heightController,
                 onIncrement: () => _updateValue(heightController, 1),
                 onDecrement: () => _updateValue(heightController, -1),
+                compact: true,
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: _buildNumberInput(
-                title: "Weight",
-                unit: "kg",
+                title: "Weight (kg)",
+                // unit: "kg",
                 controller: weightController,
                 onIncrement: () => _updateValue(weightController, 1),
                 onDecrement: () => _updateValue(weightController, -1),
+                compact: true,
               ),
             ),
           ],
@@ -140,9 +192,10 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
         const SizedBox(height: 16),
 
         _buildNumberInput(
-          title: "Age",
-          unit: "",
+          title: "Age (years)",
+          // unit: "",
           controller: ageController,
+          compact: false,
           onIncrement: () {
             setState(() {
               age++;
@@ -213,10 +266,11 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
 
   Widget _buildNumberInput({
     required String title,
-    required String unit,
+    // required String unit,
     required TextEditingController controller,
     required VoidCallback onIncrement,
     required VoidCallback onDecrement,
+    bool compact = false,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -231,21 +285,32 @@ class _OnBoardingScreen1State extends State<OnBoardingScreen1> {
           Row(
             children: [
               IconButton(
+                iconSize: compact ? 18 : 24,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
                 icon: const Icon(Icons.remove),
                 onPressed: onDecrement,
               ),
+
               Expanded(
                 child: TextField(
                   controller: controller,
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
-                    suffixText: unit,
+                    // suffixText: unit,
                     border: InputBorder.none,
                   ),
                 ),
               ),
-              IconButton(icon: const Icon(Icons.add), onPressed: onIncrement),
+
+              IconButton(
+                iconSize: compact ? 18 : 24,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: const Icon(Icons.add),
+                onPressed: onIncrement,
+              ),
             ],
           ),
         ],

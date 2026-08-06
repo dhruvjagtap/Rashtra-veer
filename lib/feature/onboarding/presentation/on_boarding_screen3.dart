@@ -1,15 +1,20 @@
+// lib/feature/onboarding/presentation/on_boarding_screen3.dart
+
 import 'package:flutter/material.dart';
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen4.dart';
 import 'package:rashtraveer/feature/onboarding/widgets/top_section.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rashtraveer/providers/onboarding_provider.dart';
 
-class OnBoardingScreen3 extends StatefulWidget {
+class OnBoardingScreen3 extends ConsumerStatefulWidget {
   static const routeName = '/onBoardingScreen3';
   const OnBoardingScreen3({super.key});
   @override
-  State<OnBoardingScreen3> createState() => _OnBoardingScreen3State();
+  ConsumerState<OnBoardingScreen3> createState() => _OnBoardingScreen3State();
 }
 
-class _OnBoardingScreen3State extends State<OnBoardingScreen3> {
+class _OnBoardingScreen3State extends ConsumerState<OnBoardingScreen3> {
   String selectedGoal = "";
 
   final List<Map<String, dynamic>> goals = [
@@ -20,6 +25,15 @@ class _OnBoardingScreen3State extends State<OnBoardingScreen3> {
     {"title": "Mental Wellness", "icon": Icons.self_improvement},
     {"title": "General Fitness", "icon": Icons.favorite},
   ];
+
+  void _saveStep3ToProvider() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    ref.read(onboardingProvider.notifier).updateGoal(selectedGoal);
+
+    ref.read(onboardingProvider.notifier).updateStep(3);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,8 +141,20 @@ class _OnBoardingScreen3State extends State<OnBoardingScreen3> {
     );
   }
 
-  void _handleNext() {
+  Future<void> _handleNext() async {
     // Navigate next
-    Navigator.pushNamed(context, OnBoardingScreen4.routeName);
+    try {
+      _saveStep3ToProvider();
+
+      if (!mounted) return;
+
+      Navigator.pushNamed(context, OnBoardingScreen4.routeName);
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Failed to save data: $e")));
+    }
   }
 }

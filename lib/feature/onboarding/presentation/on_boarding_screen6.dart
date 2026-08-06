@@ -2,17 +2,22 @@ import 'package:flutter/material.dart';
 
 import 'package:rashtraveer/feature/onboarding/widgets/top_section.dart';
 import 'package:rashtraveer/feature/onboarding/presentation/payment_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rashtraveer/providers/onboarding_provider.dart';
+import 'package:rashtraveer/feature/onboarding/data/on_boarding_repository.dart';
+import 'package:rashtraveer/providers/user_provider.dart';
+import 'package:rashtraveer/providers/repository_provider.dart';
 
-class OnBoardingScreen6 extends StatefulWidget {
+class OnBoardingScreen6 extends ConsumerStatefulWidget {
   static const routeName = '/onBoardingScreen6';
 
   const OnBoardingScreen6({super.key});
 
   @override
-  State<OnBoardingScreen6> createState() => _OnBoardingScreen6State();
+  ConsumerState<OnBoardingScreen6> createState() => _OnBoardingScreen6State();
 }
 
-class _OnBoardingScreen6State extends State<OnBoardingScreen6> {
+class _OnBoardingScreen6State extends ConsumerState<OnBoardingScreen6> {
   int selectedPlanIndex = 1;
 
   final plans = [
@@ -38,15 +43,53 @@ class _OnBoardingScreen6State extends State<OnBoardingScreen6> {
     super.dispose();
   }
 
+  Future<void> _saveStep6ToProvider() async {
+    // Current onboarding state
+    final profile = ref.read(onboardingProvider);
+
+    // Current logged in user
+    final currentUser = ref.read(userProvider);
+
+    if (currentUser == null) {
+      throw Exception('User not found');
+    }
+
+    final onboardingRepo = OnboardingRepository();
+
+    debugPrint("===== FINAL PROFILE =====");
+    debugPrint(profile.toMap().toString());
+    debugPrint("=========================");
+
+    // Final onboarding profile
+    final updatedProfile = profile.copyWith(
+      selectedPlan: plans[selectedPlanIndex]["title"].toString(),
+      currentStep: 6,
+      completed: true,
+      updatedAt: DateTime.now(),
+    );
+
+    // Save complete onboarding profile
+    await onboardingRepo.saveProfile(updatedProfile);
+
+    // Update user document
+    final updatedUser = currentUser.copyWith(onboardingCompleted: true);
+
+    final userRepo = ref.read(userRepositoryProvider);
+
+    await userRepo.updateUser(updatedUser);
+
+    // Update Riverpod states
+    ref.read(onboardingProvider.notifier).completeOnboarding();
+
+    ref.read(userProvider.notifier).setUser(updatedUser);
+  }
+
   void _finishOnboarding() {
     final plan = plans[selectedPlanIndex];
     Navigator.pushNamed(
       context,
       PaymentScreen.routeName,
-      arguments: {
-        'planTitle': plan['title'],
-        'planPrice': plan['price'],
-      },
+      arguments: {'planTitle': plan['title'], 'planPrice': plan['price']},
     );
   }
 
@@ -207,7 +250,10 @@ class _OnBoardingScreen6State extends State<OnBoardingScreen6> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: _finishOnboarding,
+                      onPressed: () async {
+                        await _saveStep6ToProvider();
+                        _finishOnboarding();
+                      },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         backgroundColor: Color(0xFF4C4A99),

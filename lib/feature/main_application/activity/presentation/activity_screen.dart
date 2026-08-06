@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rashtraveer/feature/daily_task/data/models/daily_task_model.dart';
+import 'package:rashtraveer/feature/daily_task/data/repositories/daily_task_repository.dart';
 import 'package:rashtraveer/feature/video_library/presentation/video_library_screen.dart';
 import 'activity_summary_screen.dart';
 
@@ -185,9 +187,9 @@ class StatsSection extends StatelessWidget {
       child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          StatItem(title: "Streak", value: "5 Days"),
-          StatItem(title: "Tasks", value: "3/5"),
-          StatItem(title: "Points", value: "120 Pts"),
+          StatItem(title: "Streak", value: "0 Days"),
+          StatItem(title: "Tasks", value: "0/0"),
+          StatItem(title: "Points", value: "0 Pts"),
         ],
       ),
     );
@@ -221,71 +223,89 @@ class StatItem extends StatelessWidget {
 class ActionPlanSection extends StatelessWidget {
   const ActionPlanSection({super.key});
 
+  static const String userId = "lTIpDPNQ41T5kM3x1HEbj66C1Dr1";
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Today's Action Plan",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
+    return StreamBuilder<List<DailyTaskModel>>(
+      stream: DailyTaskRepository().streamTodayTasks(userId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-        ActionCard(
-          title: "Strength Training",
-          subtitle: "45 mins • Intermediate",
-          icon: Icons.fitness_center,
-          isCompleted: false,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const VideoLibraryScreen()),
-            );
-          },
-        ),
-        ActionCard(
-          title: "Keto Meal Plan",
-          subtitle: "Breakfast & Lunch",
-          icon: Icons.restaurant,
-          isCompleted: true,
-        ),
-        ActionCard(
-          title: "Mindful Meditation",
-          subtitle: "10 mins • Relaxing",
-          icon: Icons.self_improvement,
-          isCompleted: false,
-        ),
-      ],
+        if (snapshot.hasError) {
+          return Center(child: Text(snapshot.error.toString()));
+        }
+
+        final tasks = snapshot.data ?? [];
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Today's Action Plan",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+
+            const SizedBox(height: 12),
+
+            if (tasks.isEmpty)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Center(child: Text("No Tasks Assigned")),
+              ),
+
+            ...tasks.map((task) => ActionCard(task: task)),
+          ],
+        );
+      },
     );
   }
 }
 
 class ActionCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final IconData icon;
-  final bool isCompleted;
-  final VoidCallback? onTap;
+  const ActionCard({super.key, required this.task});
 
-  const ActionCard({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-    required this.isCompleted,
-    this.onTap,
-  });
+  final DailyTaskModel task;
 
   @override
   Widget build(BuildContext context) {
+    final bool completed = task.status.toLowerCase() == "completed";
+
+    IconData icon;
+
+    switch (task.category.toLowerCase()) {
+      case "workout":
+        icon = Icons.fitness_center;
+        break;
+
+      case "diet":
+        icon = Icons.restaurant;
+        break;
+
+      case "meditation":
+        icon = Icons.self_improvement;
+        break;
+
+      default:
+        icon = Icons.check_circle_outline;
+    }
+
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => VideoLibraryScreen(taskId: task.id),
+          ),
+        );
+      },
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(14),
@@ -301,23 +321,29 @@ class ActionCard extends StatelessWidget {
               ),
               child: Icon(icon, color: ActivityScreen.primaryColor),
             ),
+
             const SizedBox(width: 12),
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    task.title,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
+
+                  const SizedBox(height: 2),
+
                   Text(
-                    subtitle,
+                    task.description,
                     style: const TextStyle(color: Colors.grey, fontSize: 12),
                   ),
                 ],
               ),
             ),
-            isCompleted
+
+            completed
                 ? const Icon(Icons.check_circle, color: Colors.green)
                 : const Icon(Icons.radio_button_unchecked, color: Colors.grey),
           ],
@@ -326,7 +352,6 @@ class ActionCard extends StatelessWidget {
     );
   }
 }
-
 //////////////////////////////////////////////////////////////
 /// WEEKLY CONSISTENCY
 //////////////////////////////////////////////////////////////

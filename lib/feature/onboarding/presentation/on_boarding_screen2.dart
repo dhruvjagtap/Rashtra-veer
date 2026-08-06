@@ -1,16 +1,21 @@
+// lib/feature/onboarding/presentation/on_boarding_screen2.dart
+
 import 'package:flutter/material.dart';
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen3.dart';
 import 'package:rashtraveer/feature/onboarding/widgets/top_section.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rashtraveer/providers/onboarding_provider.dart';
 
-class OnBoardingScreen2 extends StatefulWidget {
+class OnBoardingScreen2 extends ConsumerStatefulWidget {
   static const routeName = '/onBoardingScreen2';
   const OnBoardingScreen2({super.key});
 
   @override
-  State<OnBoardingScreen2> createState() => _OnBoardingSreen2State();
+  ConsumerState<OnBoardingScreen2> createState() => _OnBoardingSreen2State();
 }
 
-class _OnBoardingSreen2State extends State<OnBoardingScreen2> {
+class _OnBoardingSreen2State extends ConsumerState<OnBoardingScreen2> {
   bool hasDisease = false;
   String selectedDisease = "";
   TextEditingController otherController = TextEditingController();
@@ -22,6 +27,21 @@ class _OnBoardingSreen2State extends State<OnBoardingScreen2> {
       return false;
     }
     return true;
+  }
+
+  void _saveStep2ToProvider() {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) return;
+
+    ref
+        .read(onboardingProvider.notifier)
+        .updateDiseaseInfo(
+          hasDisease: hasDisease,
+          selectedDisease: selectedDisease,
+        );
+
+    ref.read(onboardingProvider.notifier).updateStep(2);
   }
 
   @override
@@ -215,7 +235,7 @@ class _OnBoardingSreen2State extends State<OnBoardingScreen2> {
     );
   }
 
-  void _handleNext() {
+  Future<void> _handleNext() async {
     if (hasDisease && selectedDisease.isEmpty) {
       ScaffoldMessenger.of(
         context,
@@ -231,8 +251,21 @@ class _OnBoardingSreen2State extends State<OnBoardingScreen2> {
       ).showSnackBar(const SnackBar(content: Text("Please specify disease")));
       return;
     }
-    // Handle Certificate Upload
-    // Navigate next
-    Navigator.pushNamed(context, OnBoardingScreen3.routeName);
+
+    // TODO: Handle Certificate Upload
+
+    try {
+      _saveStep2ToProvider();
+
+      if (!mounted) return;
+
+      Navigator.pushNamed(context, OnBoardingScreen3.routeName);
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Failed to save data: $e")));
+    }
   }
 }

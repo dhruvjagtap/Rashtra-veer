@@ -14,24 +14,72 @@ class _ResourcesScreenState extends State<ResourcesScreen>
   late TabController _tabController;
 
   final List<_Resource> _workouts = [
-    _Resource(title: 'Full Body Warmup', subtitle: '10 min • Beginner', icon: Icons.directions_run_rounded),
-    _Resource(title: 'Fat Burn Circuit', subtitle: '20 min • Intermediate', icon: Icons.local_fire_department_rounded),
-    _Resource(title: 'Core Strength', subtitle: '15 min • Intermediate', icon: Icons.fitness_center_rounded),
-    _Resource(title: 'Yoga Recovery', subtitle: '12 min • All levels', icon: Icons.self_improvement_rounded),
-    _Resource(title: 'HIIT Challenge', subtitle: '25 min • Advanced', icon: Icons.bolt_rounded),
+    _Resource(
+      title: 'Full Body Warmup',
+      subtitle: '10 min • Beginner',
+      icon: Icons.directions_run_rounded,
+    ),
+    _Resource(
+      title: 'Fat Burn Circuit',
+      subtitle: '20 min • Intermediate',
+      icon: Icons.local_fire_department_rounded,
+    ),
+    _Resource(
+      title: 'Core Strength',
+      subtitle: '15 min • Intermediate',
+      icon: Icons.fitness_center_rounded,
+    ),
+    _Resource(
+      title: 'Yoga Recovery',
+      subtitle: '12 min • All levels',
+      icon: Icons.self_improvement_rounded,
+    ),
+    _Resource(
+      title: 'HIIT Challenge',
+      subtitle: '25 min • Advanced',
+      icon: Icons.bolt_rounded,
+    ),
   ];
 
   final List<_Resource> _diet = [
-    _Resource(title: 'Keto Meal Plan', subtitle: 'High fat • Low carb', icon: Icons.restaurant_rounded),
-    _Resource(title: 'Protein Guide', subtitle: 'Post-workout nutrition', icon: Icons.egg_alt_rounded),
-    _Resource(title: 'Intermittent Fasting', subtitle: '16:8 method explained', icon: Icons.access_time_rounded),
-    _Resource(title: 'Hydration Tracker', subtitle: 'Daily water goals', icon: Icons.water_drop_rounded),
+    _Resource(
+      title: 'Keto Meal Plan',
+      subtitle: 'High fat • Low carb',
+      icon: Icons.restaurant_rounded,
+    ),
+    _Resource(
+      title: 'Protein Guide',
+      subtitle: 'Post-workout nutrition',
+      icon: Icons.egg_alt_rounded,
+    ),
+    _Resource(
+      title: 'Intermittent Fasting',
+      subtitle: '16:8 method explained',
+      icon: Icons.access_time_rounded,
+    ),
+    _Resource(
+      title: 'Hydration Tracker',
+      subtitle: 'Daily water goals',
+      icon: Icons.water_drop_rounded,
+    ),
   ];
 
   final List<_Resource> _meditation = [
-    _Resource(title: 'Morning Breathing', subtitle: '5 min • Energizing', icon: Icons.air_rounded),
-    _Resource(title: 'Sleep Meditation', subtitle: '15 min • Calming', icon: Icons.bedtime_rounded),
-    _Resource(title: 'Focus Session', subtitle: '10 min • Clarity', icon: Icons.psychology_rounded),
+    _Resource(
+      title: 'Morning Breathing',
+      subtitle: '5 min • Energizing',
+      icon: Icons.air_rounded,
+    ),
+    _Resource(
+      title: 'Sleep Meditation',
+      subtitle: '15 min • Calming',
+      icon: Icons.bedtime_rounded,
+    ),
+    _Resource(
+      title: 'Focus Session',
+      subtitle: '10 min • Clarity',
+      icon: Icons.psychology_rounded,
+    ),
   ];
 
   @override
@@ -164,7 +212,11 @@ class _ResourceCard extends StatelessWidget {
               color: _primary.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.play_arrow_rounded, color: _primary, size: 18),
+            child: const Icon(
+              Icons.play_arrow_rounded,
+              color: _primary,
+              size: 18,
+            ),
           ),
         ],
       ),

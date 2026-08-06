@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:rashtraveer/feature/main_application/resources/presentation/resources_screen.dart';
 import 'package:rashtraveer/feature/main_application/chat/presentation/chat_home_screen.dart';
+import 'package:rashtraveer/feature/main_application/chat/data/chat_store.dart';
 import 'package:rashtraveer/feature/main_application/home/presentation/home_screen.dart';
 import 'package:rashtraveer/feature/main_application/leaderboard/presentation/leaderboard_screen.dart';
 import 'package:rashtraveer/feature/main_application/activity/presentation/activity_screen.dart';
 
-/// Shell with [BottomNavigationBar] and [IndexedStack] for main app tabs.
 class MainAppScreen extends StatefulWidget {
   const MainAppScreen({super.key});
 
@@ -20,18 +20,30 @@ class _MainAppScreenState extends State<MainAppScreen> {
 
   int _selectedIndex = 0;
 
-  static const List<Widget> _pages = <Widget>[
-    HomeScreen(),
-    ActivityScreen(),
-    ResourcesScreen(),
-    ChatHomeScreen(),
-    LeaderboardScreen(),
-  ];
+  // ONE store for the lifetime of the app shell.
+  // Passed directly to ChatHomeScreen — no InheritedWidget needed.
+  final ChatStore _chatStore = ChatStore();
+
+  @override
+  void dispose() {
+    _chatStore.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _selectedIndex, children: _pages),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          const HomeScreen(),
+          const ActivityScreen(),
+          const ResourcesScreen(),
+          // Store passed directly — clean, no import ambiguity
+          ChatHomeScreen(store: _chatStore),
+          const LeaderboardScreen(),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) => setState(() => _selectedIndex = index),
@@ -58,4 +70,3 @@ class _MainAppScreenState extends State<MainAppScreen> {
     );
   }
 }
-

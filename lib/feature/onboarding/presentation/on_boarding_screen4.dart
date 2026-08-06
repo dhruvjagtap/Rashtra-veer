@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:rashtraveer/feature/onboarding/presentation/on_boarding_screen5.dart';
 import 'package:rashtraveer/feature/onboarding/widgets/top_section.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rashtraveer/providers/onboarding_provider.dart';
 
 enum StepState { activity, lifestyle, time, done }
 
-class OnBoardingScreen4 extends StatefulWidget {
+class OnBoardingScreen4 extends ConsumerStatefulWidget {
   static const routeName = '/onBoardingScreen4';
 
   const OnBoardingScreen4({super.key});
 
   @override
-  State<OnBoardingScreen4> createState() => _OnBoardingScreen4State();
+  ConsumerState<OnBoardingScreen4> createState() => _OnBoardingScreen4State();
 }
 
-class _OnBoardingScreen4State extends State<OnBoardingScreen4> {
+class _OnBoardingScreen4State extends ConsumerState<OnBoardingScreen4> {
   String selectedActivity = "";
   String selectedLifestyle = "";
   int selectedTime = 0;
@@ -49,6 +52,21 @@ class _OnBoardingScreen4State extends State<OnBoardingScreen4> {
   ];
 
   final timeOptions = [15, 30, 45, 60];
+
+  void _saveStep4ToProvider() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    ref
+        .read(onboardingProvider.notifier)
+        .updateLifestyle(
+          activity: selectedActivity,
+          lifestyle: selectedLifestyle,
+          time: selectedTime,
+        );
+
+    ref.read(onboardingProvider.notifier).updateStep(4);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -319,8 +337,20 @@ class _OnBoardingScreen4State extends State<OnBoardingScreen4> {
     }
   }
 
-  void _handleNext() {
-    /// Navigate next
-    Navigator.pushNamed(context, OnBoardingScreen5.routeName);
+  Future<void> _handleNext() async {
+    try {
+      _saveStep4ToProvider();
+
+      if (!mounted) return;
+
+      Navigator.pushNamed(context, OnBoardingScreen5.routeName);
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error saving data. Please try again.")),
+      );
+      debugPrint("Error in _handleNext: $e");
+    }
   }
 }

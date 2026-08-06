@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rashtraveer/feature/profile/presentation/edit_profile_screen.dart';
+import 'package:rashtraveer/feature/settings/presentation/profile_screen.dart';
 
 class ProfileTile extends StatelessWidget {
   const ProfileTile({super.key});
@@ -16,7 +16,7 @@ class ProfileTile extends StatelessWidget {
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
 
       onTap: () {
-        Navigator.pushNamed(context, EditProfileScreen.routeName);
+        Navigator.pushNamed(context, ProfileScreen.routeName);
       },
     );
   }
